@@ -1,6 +1,8 @@
 package com.example.easysala;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -11,9 +13,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.easysala.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-
+    private FirebaseAuth mAuth;
     private ActivityMainBinding binding;
 
     @Override
@@ -32,7 +36,16 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user  = mAuth.getCurrentUser();
         // Usuario actual
+        if (user != null) {
+            Toast.makeText(this, "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
+        } else {
+            Intent  intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
     }
 
 }

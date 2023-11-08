@@ -30,9 +30,6 @@ public class HomeFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            Toast.makeText(getActivity(), "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
-        }
 
         return root;
     }
