@@ -1,5 +1,6 @@
 package com.example.easysala.ui.notifications;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.easysala.R;
 import com.example.easysala.databinding.FragmentNotificationsBinding;
 import com.example.easysala.ui.dashboard.DashboardFragment;
+import com.example.easysala.ui.login.LoginActivity;
 
 public class NotificationsFragment extends Fragment {
 
@@ -37,7 +39,11 @@ public class NotificationsFragment extends Fragment {
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cargarFragmento(new DashboardFragment());
+                //cargarFragmento(new DashboardFragment());
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                // Abrir intent
+
+                startActivity(intent);
             }
         });
 

@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.easysala.R;
 
 import com.example.easysala.databinding.FragmentHomeBinding;
-import com.example.easysala.ui.login.LoginFragment;
 
 public class HomeFragment extends Fragment {
 
