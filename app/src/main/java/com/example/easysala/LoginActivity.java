@@ -3,6 +3,7 @@ package com.example.easysala;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        setTitle("Iniciar sesión");
 
         // Integración de firebase Auth
          mAuth = FirebaseAuth.getInstance();
@@ -48,7 +50,8 @@ public class LoginActivity extends AppCompatActivity {
                                     // Inicio de sesión exitoso
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                                    // Puedes redirigir al usuario a la siguiente actividad aquí si es necesario.
+                                    Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(pagPrincipal);
                                 } else {
                                     // Error en el inicio de sesión
                                     Toast.makeText(LoginActivity.this, "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
