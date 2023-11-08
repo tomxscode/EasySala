@@ -3,6 +3,9 @@ package com.example.easysala;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +13,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    EditText email, password;
+    Button btnLogin;
+    Button btnRegistrar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +25,18 @@ public class LoginActivity extends AppCompatActivity {
 
         // Integración de firebase Auth
          mAuth = FirebaseAuth.getInstance();
+
+         email = findViewById(R.id.txt_login_correo);
+         password  = findViewById(R.id.txt_login_pass);
+         btnRegistrar = findViewById(R.id.btn_login_reg);
+         btnRegistrar.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                String emailTxt = email.getText().toString();
+                String passTxt = password.getText().toString();
+                registrarUsuario(emailTxt, passTxt);
+             }
+         });
     }
 
     @Override
@@ -37,9 +57,12 @@ public class LoginActivity extends AppCompatActivity {
             return false; // Si el email no es válido, devolver false y no crear el usuario
         }
 
-
         mAuth.createUserWithEmailAndPassword(email, password);
-
+        // Comprobar que el usuario se creó con éxito
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            return false; // Si el usuario no se creó, devolver false y no crear el usuario
+        }
         return true;
     }
 }
