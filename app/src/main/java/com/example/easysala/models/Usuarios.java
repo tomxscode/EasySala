@@ -1,6 +1,6 @@
 package com.example.easysala.models;
 
-public class Usuario {
+public class Usuarios {
 
     private String documentId;
     private String nombre;
@@ -10,7 +10,7 @@ public class Usuario {
     private int rol;
     private boolean sesionIniciada;
 
-    public Usuario(String documentId, String nombre, String apellido, String correo, String password, int rol, boolean sesionIniciada) {
+    public Usuarios(String documentId, String nombre, String apellido, String correo, String password, int rol, boolean sesionIniciada) {
         this.documentId = documentId;
         this.nombre = nombre;
         this.apellido = apellido;
