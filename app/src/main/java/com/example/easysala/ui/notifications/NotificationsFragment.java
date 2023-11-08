@@ -14,10 +14,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.easysala.LoginActivity;
 import com.example.easysala.R;
 import com.example.easysala.databinding.FragmentNotificationsBinding;
 import com.example.easysala.ui.dashboard.DashboardFragment;
-import com.example.easysala.ui.login.LoginActivity;
 
 public class NotificationsFragment extends Fragment {
 
