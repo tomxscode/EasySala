@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156665112170",
+    "project_id": "easysala-d5be9",
+    "storage_bucket": "easysala-d5be9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156665112170:android:1b90964ff1816306afcc13",
+        "android_client_info": {
+          "package_name": "com.example.easysala"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAzlf4t9LKFFFQG5lzWF5QtFpCSiW2pck"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
