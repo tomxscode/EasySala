@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
              public void onClick(View v) {
                 String emailTxt = email.getText().toString();
                 String passTxt = password.getText().toString();
-                registrarUsuario(emailTxt, passTxt);
+                mAuth.createUserWithEmailAndPassword(emailTxt, passTxt);
              }
          });
     }
@@ -44,25 +45,5 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Verifica si el usuario inició sesión
         FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
-    public boolean registrarUsuario(String email, String password) {
-        // Crear un usuario en Firebase y verificar que se haya creado exitosamente, caso contrario, mostrará un Toast de error
-        if (email.isEmpty() || password.isEmpty()) {
-            return false; // Si alguno de los campos está vacío, devolver false y no crear el usuario
-        }
-
-        // Comprobar que el email sea válido
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return false; // Si el email no es válido, devolver false y no crear el usuario
-        }
-
-        mAuth.createUserWithEmailAndPassword(email, password);
-        // Comprobar que el usuario se creó con éxito
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            return false; // Si el usuario no se creó, devolver false y no crear el usuario
-        }
-        return true;
     }
 }
