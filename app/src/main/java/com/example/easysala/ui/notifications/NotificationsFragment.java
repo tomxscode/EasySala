@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.easysala.R;
 import com.example.easysala.databinding.FragmentNotificationsBinding;
 import com.example.easysala.ui.dashboard.DashboardFragment;
-import com.example.easysala.ui.login.LoginFragment;
 
 public class NotificationsFragment extends Fragment {
 
@@ -30,7 +29,7 @@ public class NotificationsFragment extends Fragment {
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cargarFragmento(new LoginFragment());
+                cargarFragmento(new NotificationsFragment());
             }
         });
 
@@ -52,11 +51,6 @@ public class NotificationsFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null); // Opcional, para agregar a la pila de retroceso
         fragmentTransaction.commit();
-    }
-
-
-    public void botonAccion(View v) {
-        cargarFragmento(new LoginFragment());
     }
 
     @Override
