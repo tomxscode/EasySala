@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    layout_width="match_parent"
+    layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".configuracion_principal">
+    tools:context=".configuracion_principal"
+    android:padding="10dp">
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/button7"
+        android:layout_width="326dp"
+        android:layout_height="121dp"
+        android:layout_marginVertical="30dp"
         android:text="Button" />
-</FrameLayout>
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="326dp"
+        android:layout_height="121dp"
+        android:layout_marginVertical="30dp"
+        android:text="Button" />
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="326dp"
+        android:layout_height="121dp"
+        android:layout_marginVertical="30dp"
+        android:text="Button" />
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="326dp"
+        android:layout_height="121dp"
+        android:layout_marginVertical="30dp"
+        android:text="Button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
