@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.easysala.LoginActivity;
 import com.example.easysala.R;
+import com.example.easysala.configuracion_principal;
 import com.example.easysala.databinding.FragmentNotificationsBinding;
 import com.example.easysala.ui.dashboard.DashboardFragment;
 
@@ -27,25 +28,7 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        Button btn2 = (Button) root.findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cargarFragmento(new NotificationsFragment());
-            }
-        });
-
-        Button btn4 = (Button) root.findViewById(R.id.button4);
-        btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //cargarFragmento(new DashboardFragment());
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                // Abrir intent
-
-                startActivity(intent);
-            }
-        });
+        cargarFragmento(new configuracion_principal());
 
         return root;
     }
