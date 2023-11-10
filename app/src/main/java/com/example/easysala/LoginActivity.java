@@ -60,10 +60,12 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Inicio de sesión exitoso
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
                                     Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
-                                    // Creación del objeto Usuario con los datos actuales
-                                    //MainActivity.usuarioActual = new Usuarios(user.getUid(), user.getEmail());
+
+                                    MainActivity.usuarioActual = new Usuarios(user.getUid());
+                                    MainActivity.usuarioActual.obtenerInfo();
+
+                                    Toast.makeText(LoginActivity.this, "Bienvenido " + MainActivity.usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
 
                                     startActivity(pagPrincipal);
                                 } else {
@@ -80,15 +82,9 @@ public class LoginActivity extends AppCompatActivity {
              public void onClick(View v) {
                  String emailTxt = email.getText().toString();
                  String passTxt = password.getText().toString();
-                 /*
-                    Obtener el nombre y apellido, en 2 variables, dejando las iniciales en mayúsculas.
-                    El formato del correo es: nombre.apellido@dominio.com
-                    Puede contener números al final del apellido, así que hay que borrarlos del apellido
-                 */
                  String nombre = emailTxt.substring(0, emailTxt.indexOf("."));
                  String apellido = emailTxt.substring(emailTxt.indexOf(".") + 1, emailTxt.indexOf("@"));
 
-                 // Intentar crear el usuario en Firebase Authentication, si se puede entonces que haga algo, si no, que haga otra cosa
                  mAuth.createUserWithEmailAndPassword(emailTxt, passTxt)
                          .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                              @Override

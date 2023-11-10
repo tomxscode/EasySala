@@ -1,11 +1,15 @@
 package com.example.easysala.models;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayoutStates;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +46,33 @@ public class Usuarios {
         db.collection("usuario")
                 .whereEqualTo("uid_user", uid_bd)
                 .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document =  task.getResult().getDocuments().get(0);
+                            if (document.exists()) {
+                                // Asignación a los atributos
+                                documentId = document.getId();
+                                nombre = document.getString("nombre");
+                                apellido = document.getString("apellido");
+                                rol = document.getLong("rol").intValue();
+                                correo = document.getString("correo");
+                                habilitado = document.getBoolean("habilitado");
+                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
+                                Log.d(ConstraintLayoutStates.TAG, nombre);
+                            } else {
+                                Log.d(ConstraintLayoutStates.TAG, "Documento no encontrado");
+                            }
+                        }
+                    }
+                });
+    }
+
+    /*public void obtenerInfo() {
+        db.collection("usuario")
+                .whereEqualTo("uid_user", uid_bd)
+                .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot querySnapshot) {
@@ -49,16 +80,22 @@ public class Usuarios {
                             documentId = document.getId();
                             nombre = document.getString("nombre");
                             apellido = document.getString("apellido");
-                            rol = Integer.parseInt(document.getString("rol"));
+                            rol = document.getLong("rol").intValue();
                             correo = document.getString("correo");
                             habilitado = document.getBoolean("habilitado");
                         }
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(ConstraintLayoutStates.TAG, "Error al obtener información", e);
+                    }
                 });
-    }
+    }*/
 
     public void guardarBd() {
-        FirebaseFirestore  db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> usuario = new HashMap<>();
         usuario.put("nombre", nombre);
         usuario.put("apellido", apellido);
