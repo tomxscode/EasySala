@@ -2,7 +2,7 @@
     <string name="app_name">EasySala</string>
     <string name="title_home">Inicio</string>
     <string name="title_dashboard">Panel de control</string>
-    <string name="title_notifications">Notificaciones</string>
+    <string name="title_notifications">Ajustes</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
