@@ -7,7 +7,9 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +45,25 @@ public class Usuarios {
         this.rol = rol;
         this.documentId = documentId;
         this.uid_bd  = uid_bd;
+    }
+
+    public void obtenerInfo() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("usuario")
+                .whereEqualTo("uid_user", uid_bd)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot querySnapshot) {
+                        for (DocumentSnapshot document : querySnapshot) {
+                            documentId = document.getId();
+                            nombre = document.getString("nombre");
+                            apellido = document.getString("apellido");
+                            rol = Integer.parseInt(document.getString("rol"));
+                            correo = document.getString("correo");
+                        }
+                    }
+                });
     }
 
     public void guardarBd() {
