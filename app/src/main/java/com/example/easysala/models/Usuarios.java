@@ -16,35 +16,25 @@ import java.util.Map;
 
 public class Usuarios {
 
-    private String documentId;
+    private String documentId; // documentId de la colección usuarios
     private String nombre;
     private String apellido;
     private String correo;
     private int rol;
-    private boolean sesionIniciada;
-    private String uid_bd;
+    private String uid_bd; // uid del usuario en authentication
+    private boolean habilitado;
 
-    public Usuarios(String documentId, String nombre, String apellido, String correo, int rol, boolean sesionIniciada) {
-        this.documentId = documentId;
+    public Usuarios(String uid_bd) {
+        this.uid_bd = uid_bd;
+    }
+
+    public Usuarios(String nombre, String apellido, String correo, int rol, String uid_bd, boolean habilitado) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
         this.rol = rol;
-        this.sesionIniciada = sesionIniciada;
-    }
-
-    public Usuarios(String documentId, String correo) {
-        this.documentId = documentId;
-        this.correo = correo;
-    }
-
-    public Usuarios(String nombre, String apellido, String correo, int rol, String documentId, String uid_bd) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.correo = correo;
-        this.rol = rol;
-        this.documentId = documentId;
-        this.uid_bd  = uid_bd;
+        this.uid_bd = uid_bd;
+        this.habilitado = habilitado;
     }
 
     public void obtenerInfo() {
@@ -61,6 +51,7 @@ public class Usuarios {
                             apellido = document.getString("apellido");
                             rol = Integer.parseInt(document.getString("rol"));
                             correo = document.getString("correo");
+                            habilitado = document.getBoolean("habilitado");
                         }
                     }
                 });
@@ -73,14 +64,15 @@ public class Usuarios {
         usuario.put("apellido", apellido);
         usuario.put("correo", correo);
         usuario.put("rol", rol);
-        usuario.put("uid_user", documentId);
+        usuario.put("uid_user", uid_bd);
+        usuario.put("habilitado", habilitado);
 
         db.collection("usuario")
                 .add(usuario)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        uid_bd = documentReference.getId();
+                        documentId = documentReference.getId();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -131,11 +123,4 @@ public class Usuarios {
         this.rol = rol;
     }
 
-    public boolean isSesionIniciada() {
-        return sesionIniciada;
-    }
-
-    public void setSesionIniciada(boolean sesionIniciada) {
-        this.sesionIniciada = sesionIniciada;
-    }
 }
