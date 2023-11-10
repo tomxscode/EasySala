@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.easysala.models.Usuarios;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -42,6 +43,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {;
                 String emailTxt = email.getText().toString();
                 String passTxt = password.getText().toString();
+                // Comprobación que los campos no estén vacíos
+                if (emailTxt.isEmpty() || passTxt.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // Comprobar que el dominio sea "@virginiogomez.cl"
+                if (!emailTxt.endsWith("@virginiogomez.cl")) {
+                    Toast.makeText(LoginActivity.this, "Tu correo no es de la institución", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mAuth.signInWithEmailAndPassword(emailTxt, passTxt)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -51,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(LoginActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
                                     Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
+                                    // Creación del objeto Usuario con los datos actuales
+                                    MainActivity.usuarioActual = new Usuarios(user.getUid(), user.getEmail());
+
                                     startActivity(pagPrincipal);
                                 } else {
                                     // Error en el inicio de sesión

@@ -20,6 +20,11 @@ public class Usuarios {
         this.sesionIniciada = sesionIniciada;
     }
 
+    public Usuarios(String documentId, String correo) {
+        this.documentId = documentId;
+        this.correo = correo;
+    }
+
     public String getDocumentId() {
         return documentId;
     }
