@@ -6,16 +6,14 @@ public class Usuarios {
     private String nombre;
     private String apellido;
     private String correo;
-    private String password;
     private int rol;
     private boolean sesionIniciada;
 
-    public Usuarios(String documentId, String nombre, String apellido, String correo, String password, int rol, boolean sesionIniciada) {
+    public Usuarios(String documentId, String nombre, String apellido, String correo, int rol, boolean sesionIniciada) {
         this.documentId = documentId;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
-        this.password = password;
         this.rol = rol;
         this.sesionIniciada = sesionIniciada;
     }
@@ -55,14 +53,6 @@ public class Usuarios {
 
     public void setCorreo(String correo) {
         this.correo = correo;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public int getRol() {
