@@ -14,10 +14,10 @@
         android:paddingVertical="10dp">
 
         <Button
-            android:id="@+id/btn1"
+            android:id="@+id/btnMiPerfil"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Mi cuenta" />
+            android:text="Ver mi perfil" />
 
         <Button
             android:id="@+id/btn2"

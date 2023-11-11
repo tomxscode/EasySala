@@ -1,8 +1,11 @@
 package com.example.easysala;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.easysala.ui.configuracion.miCuenta;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -64,6 +68,14 @@ public class configuracion_principal extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Botón: Mi cuenta
+        Button btnVerMiCuenta = view.findViewById(R.id.btnMiPerfil);
+        btnVerMiCuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmento(new miCuenta());
+            }
+        });
         // Botón: Cerrar sesión
         Button btnCerrarSesion = view.findViewById(R.id.btn_cerrarSesion);
         btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
@@ -71,9 +83,10 @@ public class configuracion_principal extends Fragment {
             public void onClick(View v) {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
+                MainActivity.usuarioActual = null;
                 Toast.makeText(getActivity(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
-                // Rederigir a: Login Activity
-                getActivity().finish();
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -83,5 +96,13 @@ public class configuracion_principal extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_configuracion_principal, container, false);
+    }
+
+    private void cargarFragmento(Fragment fragment) {
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null); // Opcional, para agregar a la pila de retroceso
+        fragmentTransaction.commit();
     }
 }

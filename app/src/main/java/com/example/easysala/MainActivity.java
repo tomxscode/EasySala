@@ -1,5 +1,7 @@
 package com.example.easysala;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -8,6 +10,7 @@ import com.example.easysala.models.CallbackUsuario;
 import com.example.easysala.models.Usuarios;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     public static Usuarios usuarioActual;
+    public static boolean sesionIniciada = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -42,28 +45,51 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user  = mAuth.getCurrentUser();
+
         // Usuario actual
         if (user != null) {
-            Toast.makeText(this, "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
-            MainActivity.usuarioActual = new Usuarios(user.getUid());
-            MainActivity.usuarioActual.obtenerInfo(new CallbackUsuario() {
-                @Override
-                public void onError(String mensaje) {
+            if (sesionIniciada) {
+                Toast.makeText(this, "Sesión iniciada", Toast.LENGTH_SHORT).show();
+            } else {
+                usuarioActual = new Usuarios(user.getUid());
+                ProgressDialog dialogoCargando = new ProgressDialog(this);
+                dialogoCargando.setMessage("Cargando información...");
+                dialogoCargando.show();
+                MainActivity.usuarioActual = new Usuarios(user.getUid());
+                MainActivity.usuarioActual.obtenerInfo(new CallbackUsuario() {
+                    @Override
+                    public void onError(String mensaje) {
 
-                }
+                    }
 
-                @Override
-                public void onObtenerInfo(boolean encontrado) {
-                    if (encontrado) {
-                        if (!MainActivity.usuarioActual.isHabilitado()) {
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            Toast.makeText(MainActivity.this, "Usuario inhabilitado", Toast.LENGTH_SHORT).show();
-                            finish();
+                    @Override
+                    public void onObtenerInfo(boolean encontrado) {
+                        if (encontrado) {
+                            dialogoCargando.dismiss();
+                            if (usuarioActual.isHabilitado()) {
+                                sesionIniciada = true;
+                                Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                AlertDialog .Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("Información");
+                                builder.setMessage("Tu cuenta está deshabilitada, por favor contacta con el administrador");
+                                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        sesionIniciada = false;
+                                        usuarioActual = null;
+                                        mAuth.signOut();
+                                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
+                                builder.show();
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         } else {
             Intent  intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
