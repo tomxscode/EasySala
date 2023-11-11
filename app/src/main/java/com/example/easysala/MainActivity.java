@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 ProgressDialog dialogoCargando = new ProgressDialog(this);
                 dialogoCargando.setMessage("Cargando información...");
                 dialogoCargando.show();
-                MainActivity.usuarioActual = new Usuarios(user.getUid());
+                //MainActivity.usuarioActual = new Usuarios(user.getUid());
                 MainActivity.usuarioActual.obtenerInfo(new CallbackUsuario() {
                     @Override
                     public void onError(String mensaje) {

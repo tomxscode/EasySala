@@ -57,34 +57,6 @@ public class Usuarios implements CallbackUsuario {
         this.habilitado = habilitado;
     }
 
-    /*public void obtenerInfo(CallbackUsuario callback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("usuario")
-                .whereEqualTo("uid_user", uid_bd)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document =  task.getResult().getDocuments().get(0);
-                            if (document.exists()) {
-                                // Asignación a los atributos
-                                documentId = document.getId();
-                                nombre = document.getString("nombre");
-                                apellido = document.getString("apellido");
-                                rol = document.getLong("rol").intValue();
-                                correo = document.getString("correo");
-                                habilitado = document.getBoolean("habilitado");
-                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
-                                Log.d(ConstraintLayoutStates.TAG, nombre);
-                            } else {
-                                Log.d(ConstraintLayoutStates.TAG, "Documento no encontrado");
-                            }
-                        }
-                    }
-                });
-    }*/
-
     public void obtenerInfo(CallbackUsuario callback) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
