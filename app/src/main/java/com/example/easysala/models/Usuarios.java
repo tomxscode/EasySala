@@ -41,6 +41,22 @@ public class Usuarios {
         this.habilitado = habilitado;
     }
 
+    public String getUid_bd() {
+        return uid_bd;
+    }
+
+    public void setUid_bd(String uid_bd) {
+        this.uid_bd = uid_bd;
+    }
+
+    public boolean isHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(boolean habilitado) {
+        this.habilitado = habilitado;
+    }
+
     public void obtenerInfo() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuario")
