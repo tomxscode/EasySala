@@ -18,7 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Usuarios {
+public class Usuarios implements CallbackUsuario {
 
     private String documentId; // documentId de la colección usuarios
     private String nombre;
@@ -57,7 +57,7 @@ public class Usuarios {
         this.habilitado = habilitado;
     }
 
-    public void obtenerInfo() {
+    /*public void obtenerInfo(CallbackUsuario callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuario")
                 .whereEqualTo("uid_user", uid_bd)
@@ -83,32 +83,53 @@ public class Usuarios {
                         }
                     }
                 });
-    }
+    }*/
 
-    /*public void obtenerInfo() {
+    public void obtenerInfo(CallbackUsuario callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("usuario")
                 .whereEqualTo("uid_user", uid_bd)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
                     @Override
-                    public void onSuccess(QuerySnapshot querySnapshot) {
-                        for (DocumentSnapshot document : querySnapshot) {
-                            documentId = document.getId();
-                            nombre = document.getString("nombre");
-                            apellido = document.getString("apellido");
-                            rol = document.getLong("rol").intValue();
-                            correo = document.getString("correo");
-                            habilitado = document.getBoolean("habilitado");
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+
+                            if (document.exists()) {
+
+                                nombre = document.getString("nombre");
+                                apellido = document.getString("apellido");
+                                correo = document.getString("correo");
+                                rol = document.getLong("rol").intValue();
+                                habilitado = document.getBoolean("habilitado");
+                                documentId = document.getId();
+                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
+
+                                callback.onObtenerInfo(true);
+
+                            } else {
+
+                                callback.onObtenerInfo(false);
+
+                            }
+
+                        } else {
+
+                            callback.onError("Error en consulta");
+
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(ConstraintLayoutStates.TAG, "Error al obtener información", e);
+
                     }
                 });
-    }*/
+
+    }
+
 
     public void guardarBd() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -176,4 +197,13 @@ public class Usuarios {
         this.rol = rol;
     }
 
+    @Override
+    public void onError(String mensaje) {
+
+    }
+
+    @Override
+    public void onObtenerInfo(boolean encontrado) {
+
+    }
 }

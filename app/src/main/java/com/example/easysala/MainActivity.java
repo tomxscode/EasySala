@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.easysala.models.CallbackUsuario;
 import com.example.easysala.models.Usuarios;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -44,6 +45,25 @@ public class MainActivity extends AppCompatActivity {
         // Usuario actual
         if (user != null) {
             Toast.makeText(this, "Bienvenido " + user.getEmail(), Toast.LENGTH_SHORT).show();
+            MainActivity.usuarioActual = new Usuarios(user.getUid());
+            MainActivity.usuarioActual.obtenerInfo(new CallbackUsuario() {
+                @Override
+                public void onError(String mensaje) {
+
+                }
+
+                @Override
+                public void onObtenerInfo(boolean encontrado) {
+                    if (encontrado) {
+                        if (!MainActivity.usuarioActual.isHabilitado()) {
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            Toast.makeText(MainActivity.this, "Usuario inhabilitado", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                }
+            });
         } else {
             Intent  intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
