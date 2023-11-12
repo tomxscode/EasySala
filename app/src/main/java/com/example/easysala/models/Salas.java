@@ -2,57 +2,69 @@ package com.example.easysala.models;
 
 public class Salas {
 
-    private String documentId;
-    private String edificio;
-    private TiposSalas tipo;
-    private int capacidad;
-    private String descripcion;
+    private int IdSala;
+    private String NombreSala;
+    private int Capacidad;
+    private String Descripcion;
 
-    public Salas(String documentId, String edificio, TiposSalas tipo, int capacidad, String descripcion) {
-        this.documentId = documentId;
-        this.edificio = edificio;
-        this.tipo = tipo;
-        this.capacidad = capacidad;
-        this.descripcion = descripcion;
+    private TipoInmobiliario TipoInmobiliarioSala;
+
+    private TipoSala TipoSala;
+
+    public Salas(int idSala, String nombreSala, int capacidad, String descripcion, TipoInmobiliario tipoInmobiliarioSala, com.example.easysala.models.TipoSala tipoSala) {
+        IdSala = idSala;
+        NombreSala = nombreSala;
+        Capacidad = capacidad;
+        Descripcion = descripcion;
+        TipoInmobiliarioSala = tipoInmobiliarioSala;
+        TipoSala = tipoSala;
     }
 
-    public String getDocumentId() {
-        return documentId;
+    public TipoInmobiliario getTipoInmobiliarioSala() {
+        return TipoInmobiliarioSala;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setTipoInmobiliarioSala(TipoInmobiliario tipoInmobiliarioSala) {
+        TipoInmobiliarioSala = tipoInmobiliarioSala;
     }
 
-    public String getEdificio() {
-        return edificio;
+    public com.example.easysala.models.TipoSala getTipoSala() {
+        return TipoSala;
     }
 
-    public void setEdificio(String edificio) {
-        this.edificio = edificio;
+    public void setTipoSala(com.example.easysala.models.TipoSala tipoSala) {
+        TipoSala = tipoSala;
     }
 
-    public TiposSalas getTipo() {
-        return tipo;
+    public int getIdSala() {
+        return IdSala;
     }
 
-    public void setTipo(TiposSalas tipo) {
-        this.tipo = tipo;
+    public void setIdSala(int idSala) {
+        IdSala = idSala;
+    }
+
+    public String getNombreSala() {
+        return NombreSala;
+    }
+
+    public void setNombreSala(String nombreSala) {
+        NombreSala = nombreSala;
     }
 
     public int getCapacidad() {
-        return capacidad;
+        return Capacidad;
     }
 
     public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
+        Capacidad = capacidad;
     }
 
     public String getDescripcion() {
-        return descripcion;
+        return Descripcion;
     }
 
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        Descripcion = descripcion;
     }
 }
