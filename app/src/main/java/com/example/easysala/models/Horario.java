@@ -12,6 +12,8 @@ public class Horario {
 
     private Salas SalaHorario;
 
+
+
     public Horario(int idHorario, boolean disponibilidad, Bloque bloqueHorario, Dia diaHorario, Salas salaHorario) {
         IdHorario = idHorario;
         Disponibilidad = disponibilidad;

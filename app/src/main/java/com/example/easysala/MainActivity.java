@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             if (sesionIniciada) {
                 Toast.makeText(this, "Sesión iniciada", Toast.LENGTH_SHORT).show();
+                
             } else {
                 usuarioActual = new Usuarios(user.getUid());
                 ProgressDialog dialogoCargando = new ProgressDialog(this);
