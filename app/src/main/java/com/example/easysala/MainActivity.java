@@ -4,9 +4,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.example.easysala.models.CallbackModelo;
 import com.example.easysala.models.CallbackUsuario;
+import com.example.easysala.models.Modelo;
 import com.example.easysala.models.Usuarios;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -69,7 +72,26 @@ public class MainActivity extends AppCompatActivity {
                             dialogoCargando.dismiss();
                             if (usuarioActual.isHabilitado()) {
                                 sesionIniciada = true;
-                                Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
+
+                                Modelo modelo = new Modelo("kr6l4FH3EDeqKZwnh0rJ");
+                                modelo.obtenerInfo(new CallbackModelo() {
+                                    @Override
+                                    public void onInfoCargada(boolean estado) {
+                                        if (estado) {
+                                            Toast.makeText(MainActivity.this, "Modelo cargado " + modelo.getNombreModelo(), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(String mensaje) {
+                                        System.out.println(mensaje);
+                                        Log.d("ERROR", mensaje);
+                                    }
+                                });
+
                             } else {
                                 AlertDialog .Builder builder = new AlertDialog.Builder(MainActivity.this);
                                 builder.setTitle("Información");

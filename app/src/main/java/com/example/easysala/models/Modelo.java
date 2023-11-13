@@ -1,23 +1,39 @@
 package com.example.easysala.models;
 
-public class Modelo {
+import android.util.Log;
 
-    private int IdModelo;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayoutStates;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+public class Modelo implements CallbackModelo {
+
+    private String IdModelo;
     private String NombreModelo;
 
     private Marca MarcaModelo;
 
-    public Modelo(int idModelo, String nombreModelo, Marca marcaModelo) {
+    public Modelo(String idModelo, String nombreModelo, Marca marcaModelo) {
         IdModelo = idModelo;
         NombreModelo = nombreModelo;
         MarcaModelo = marcaModelo;
     }
 
-    public int getIdModelo() {
+    public Modelo(String idModelo) {
+        IdModelo = idModelo;
+    }
+
+    public String getIdModelo() {
         return IdModelo;
     }
 
-    public void setIdModelo(int idModelo) {
+    public void setIdModelo(String idModelo) {
         IdModelo = idModelo;
     }
 
@@ -35,5 +51,47 @@ public class Modelo {
 
     public void setMarcaModelo(Marca marcaModelo) {
         MarcaModelo = marcaModelo;
+    }
+
+    public void obtenerInfo(CallbackModelo callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("modelo_implemento").document(this.getIdModelo());
+        docRef
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+                            DocumentSnapshot document = task.getResult();
+
+                            if (document.exists()) {
+                                setNombreModelo(document.getString("nombre"));
+                                callback.onInfoCargada(true);
+
+                            } else {
+                                callback.onInfoCargada(false);
+                            }
+
+                        } else {
+                            callback.onError("Error en consulta");
+                        }
+
+                    }
+                });
+
+    }
+
+    @Override
+    public void onError(String mensaje) {
+
+    }
+
+    @Override
+    public void onInfoCargada(boolean estado) {
+
     }
 }
