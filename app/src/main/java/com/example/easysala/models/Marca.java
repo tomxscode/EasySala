@@ -21,6 +21,10 @@ public class Marca implements CallbackMarca{
         NombreMarca = nombreMarca;
     }
 
+    public Marca(String idMarca) {
+        IdMarca = idMarca;
+    }
+
     public String getIdMarca() {
         return IdMarca;
     }

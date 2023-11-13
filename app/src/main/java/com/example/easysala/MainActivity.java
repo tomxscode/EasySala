@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onInfoCargada(boolean estado) {
                                         if (estado) {
-                                            Toast.makeText(MainActivity.this, "Modelo cargado " + modelo.getNombreModelo(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Modelo cargado " + modelo.getNombreModelo() + " " + modelo.getMarcaModelo().getNombreMarca(), Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
                                         }

@@ -70,8 +70,25 @@ public class Modelo implements CallbackModelo {
 
                             if (document.exists()) {
                                 setNombreModelo(document.getString("nombre"));
-                                callback.onInfoCargada(true);
+                                String documentMarca = document.getString("marca");
+                                Marca marca = new Marca(documentMarca);
+                                marca.obtenerInfo(new CallbackMarca() {
+                                    @Override
+                                    public void onError(String error) {
 
+                                    }
+
+                                    @Override
+                                    public void onObtenerInfo(boolean encontrado) {
+                                        if (encontrado) {
+                                            setMarcaModelo(marca);
+                                            callback.onInfoCargada(true);
+                                        } else {
+                                            setMarcaModelo(null);
+                                            callback.onInfoCargada(false);
+                                        }
+                                    }
+                                });
                             } else {
                                 callback.onInfoCargada(false);
                             }
