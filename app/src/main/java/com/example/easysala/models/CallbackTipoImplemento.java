@@ -1,6 +1,6 @@
-package com.example.easysala.models;
+    package com.example.easysala.models;
 
-public interface CallbackTipoImplemento {
-    void onError(String mensaje);
-    void InfoCargada(boolean estado);
-}
+    public interface CallbackTipoImplemento {
+        void onError(String mensaje);
+        void InfoCargada(boolean estado);
+    }

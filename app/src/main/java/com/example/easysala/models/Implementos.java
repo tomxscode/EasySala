@@ -1,5 +1,7 @@
 package com.example.easysala.models;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -87,7 +89,7 @@ public class Implementos  implements CallbackImplemento{
         TipoImplemento = tipoImplemento;
     }
 
-    public void obtenerInfo(CallbackImplemento callback) {
+    public void obtenerInfo(CallbackImplemento callback){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("implemento").document(this.getIdImplemento());
@@ -109,40 +111,42 @@ public class Implementos  implements CallbackImplemento{
                         modelo.obtenerInfo(new CallbackModelo() {
                             @Override
                             public void onError(String mensaje) {
+                                Log.d("ENTRA","ENTR+Ó");
                                 callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
                                 callback.onInfoCargada(false);
                             }
 
                             @Override
                             public void onInfoCargada(boolean estado) {
+
                                 if (estado) {
+                                    Log.d("TAG" , modelo.getNombreModelo());
                                     setModeloImplemento(modelo);
+                                    callback.onInfoCargada(true);
                                 } else {
+                                    Log.d("TAG" , "nOM SE ENCONTRO NAD ");
                                     setModeloImplemento(null);
+                                    callback.onInfoCargada(false);
                                 }
 
                                 // Llamada al callback para indicar que la información del modelo se cargó
-                                callback.onInfoCargada(estado);
+
                             }
                         });
 
                         tipo.obtenerInfo(new CallbackTipoImplemento() {
                             @Override
-                            public void onError(String error) {
-                                callback.onError(error);  // Manejar errores relacionados con la obtención del tipo
-                                callback.onInfoCargada(false);
+                            public void onError(String mensaje) {
+
                             }
 
                             @Override
-                            public void InfoCargada(boolean encontrado) {
-                                if (encontrado) {
+                            public void InfoCargada(boolean estado) {
+                                if(estado){
                                     setTipoImplemento(tipo);
-                                } else {
+                                }else{
                                     setTipoImplemento(null);
                                 }
-
-                                // Llamada al callback para indicar que la información del tipo se cargó
-                                callback.onInfoCargada(encontrado);
                             }
                         });
                     } else {

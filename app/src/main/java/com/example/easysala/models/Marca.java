@@ -60,7 +60,6 @@ public class Marca implements CallbackMarca{
                             if (document.exists()) {
 
                                 NombreMarca = document.getString("nombre");
-                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
                                 callback.onObtenerInfo(true);
 
                             } else {

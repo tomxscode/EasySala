@@ -71,6 +71,7 @@ public class Modelo implements CallbackModelo {
                             if (document.exists()) {
                                 setNombreModelo(document.getString("nombre"));
                                 String documentMarca = document.getString("marca");
+                                //.
                                 Marca marca = new Marca(documentMarca);
                                 marca.obtenerInfo(new CallbackMarca() {
                                     @Override

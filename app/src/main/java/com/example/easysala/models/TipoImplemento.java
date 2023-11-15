@@ -69,7 +69,7 @@ public class TipoImplemento implements CallbackTipoImplemento {
 
                                 NombreTipoImplemento = document.getString("nombre");
                                 Descripcion = document.getString("descripcion");
-                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
+                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado" + getNombreTipoImplemento());
                                 callback.InfoCargada(true);
                             } else {
                                 callback.InfoCargada(false);
