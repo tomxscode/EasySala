@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.implementos.listar_implementos">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="10dp"
+    >
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
 
-</FrameLayout>
+        >
+        <Spinner
+            android:id="@+id/sp_filtro_tipo"
+            >
+        </Spinner>
+        <Spinner
+            android:id="@+id/sp_filtro_modelo"
+            >
+        </Spinner>
+        <Button
+            android:id="@+id/btnFiltrar"
+            android:text="Filtrar"
+            >
+        </Button>
+    </GridLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>
