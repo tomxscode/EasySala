@@ -1,24 +1,35 @@
 package com.example.easysala.models;
 
-public class TipoImplemento {
+import android.util.Log;
 
-    private int IdTipoImplemento;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayoutStates;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class TipoImplemento implements CallbackTipoImplemento {
+
+    private String IdTipoImplemento;
 
     private String NombreTipoImplemento;
 
     private String Descripcion;
 
-    public TipoImplemento(int idTipoImplemento, String nombreTipoImplemento, String descripcion) {
+    public TipoImplemento(String idTipoImplemento, String nombreTipoImplemento, String descripcion) {
         IdTipoImplemento = idTipoImplemento;
         NombreTipoImplemento = nombreTipoImplemento;
         Descripcion = descripcion;
     }
+    public TipoImplemento(String idTipoImplemento){IdTipoImplemento = idTipoImplemento;}
 
-    public int getIdTipoImplemento() {
+    public String getIdTipoImplemento(){
         return IdTipoImplemento;
     }
 
-    public void setIdTipoImplemento(int idTipoImplemento) {
+    public void setIdTipoImplemento(String idTipoImplemento) {
         IdTipoImplemento = idTipoImplemento;
     }
 
@@ -36,5 +47,49 @@ public class TipoImplemento {
 
     public void setDescripcion(String descripcion) {
         Descripcion = descripcion;
+    }
+
+    public void obtenerInfo(CallbackTipoImplemento callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(("tipo_implemento"))
+                .document(this.getIdTipoImplemento())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+                            DocumentSnapshot document = task.getResult();
+
+                            if (document.exists()) {
+
+                                NombreTipoImplemento = document.getString("nombre");
+                                Descripcion = document.getString("descripcion");
+                                Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
+                                callback.onInfoCargada(true);
+                            } else {
+                                callback.onInfoCargada(false);
+                            }
+                        } else {
+                            callback.onError("Error en consulta");
+                        }
+
+                    }
+                });
+    }
+
+
+    @Override
+    public void onError(String mensaje) {
+
+    }
+
+    @Override
+    public void onInfoCargada(boolean estado) {
+
     }
 }
