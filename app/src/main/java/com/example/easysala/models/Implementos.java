@@ -1,8 +1,17 @@
 package com.example.easysala.models;
 
-public class Implementos {
+import androidx.annotation.NonNull;
 
-    private int IdImplemento;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.common.collect.ImmutableList;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class Implementos  implements CallbackImplemento{
+
+    private String IdImplemento;
     private String NombreImplemento;
     private String Ubicacion;
     private int Cantidad;
@@ -12,7 +21,7 @@ public class Implementos {
 
     private TipoImplemento TipoImplemento;
 
-    public Implementos(int idImplemento, String nombreImplemento, String ubicacion, int cantidad, String descripcion, Modelo modeloImplemento, com.example.easysala.models.TipoImplemento tipoImplemento) {
+    public Implementos(String idImplemento, String nombreImplemento, String ubicacion, int cantidad, String descripcion, Modelo modeloImplemento, com.example.easysala.models.TipoImplemento tipoImplemento) {
         IdImplemento = idImplemento;
         NombreImplemento = nombreImplemento;
         Ubicacion = ubicacion;
@@ -21,12 +30,12 @@ public class Implementos {
         ModeloImplemento = modeloImplemento;
         TipoImplemento = tipoImplemento;
     }
-
-    public int getIdImplemento() {
+    public Implementos(String idImplemento){IdImplemento = idImplemento;}
+    public String getIdImplemento() {
         return IdImplemento;
     }
 
-    public void setIdImplemento(int idImplemento) {
+    public void setIdImplemento(String idImplemento) {
         IdImplemento = idImplemento;
     }
 
@@ -76,5 +85,89 @@ public class Implementos {
 
     public void setTipoImplemento(com.example.easysala.models.TipoImplemento tipoImplemento) {
         TipoImplemento = tipoImplemento;
+    }
+
+    public void obtenerInfo(CallbackImplemento callback) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("implemento").document(this.getIdImplemento());
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        setNombreImplemento(document.getString("Nombre"));
+                        setUbicacion(document.getString("Ubicacion"));
+                        String documentTipo = document.getString("tipo");
+                        TipoImplemento tipo = new TipoImplemento(documentTipo);
+                        String documentModelo = document.getString("modelo");
+                        Modelo modelo = new Modelo(documentModelo);
+
+                        modelo.obtenerInfo(new CallbackModelo() {
+                            @Override
+                            public void onError(String mensaje) {
+                                callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
+                                callback.onInfoCargada(false);
+                            }
+
+                            @Override
+                            public void onInfoCargada(boolean estado) {
+                                if (estado) {
+                                    setModeloImplemento(modelo);
+                                } else {
+                                    setModeloImplemento(null);
+                                }
+
+                                // Llamada al callback para indicar que la información del modelo se cargó
+                                callback.onInfoCargada(estado);
+                            }
+                        });
+
+                        tipo.obtenerInfo(new CallbackTipoImplemento() {
+                            @Override
+                            public void onError(String error) {
+                                callback.onError(error);  // Manejar errores relacionados con la obtención del tipo
+                                callback.onInfoCargada(false);
+                            }
+
+                            @Override
+                            public void InfoCargada(boolean encontrado) {
+                                if (encontrado) {
+                                    setTipoImplemento(tipo);
+                                } else {
+                                    setTipoImplemento(null);
+                                }
+
+                                // Llamada al callback para indicar que la información del tipo se cargó
+                                callback.onInfoCargada(encontrado);
+                            }
+                        });
+                    } else {
+                        // Llamada al callback para indicar que la información no fue cargada
+                        callback.onInfoCargada(false);
+                    }
+                } else {
+                    // Llamada al callback para manejar errores generales de consulta
+                    callback.onError("Error en consulta: " + task.getException().getMessage());
+                    callback.onInfoCargada(false);
+                }
+            }
+        });
+    }
+
+
+
+
+    @Override
+    public void onError(String mensaje) {
+
+    }
+
+    @Override
+    public void onInfoCargada(boolean estado) {
+
     }
 }

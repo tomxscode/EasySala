@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.easysala.models.CallbackImplemento;
 import com.example.easysala.models.CallbackModelo;
 import com.example.easysala.models.CallbackTipoImplemento;
 import com.example.easysala.models.CallbackUsuario;
+import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Modelo;
 import com.example.easysala.models.TipoImplemento;
 import com.example.easysala.models.Usuarios;
@@ -76,12 +78,12 @@ public class MainActivity extends AppCompatActivity {
                                 sesionIniciada = true;
                                 //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
 
-                                TipoImplemento modelo = new TipoImplemento("T6P4TgV9jLwEnZTDKt7P");
-                                modelo.obtenerInfo(new CallbackTipoImplemento() {
+                                Implementos modelo = new Implementos("hleSsOrfwsheXPSDDiML");
+                                modelo.obtenerInfo(new CallbackImplemento(){
                                     @Override
                                     public void onInfoCargada(boolean estado) {
                                         if (estado) {
-                                            Toast.makeText(MainActivity.this, "Modelo cargado " + modelo.getNombreTipoImplemento(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Implemento cargado " + modelo.getModeloImplemento().getNombreModelo(), Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
                                         }

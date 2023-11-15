@@ -70,9 +70,9 @@ public class TipoImplemento implements CallbackTipoImplemento {
                                 NombreTipoImplemento = document.getString("nombre");
                                 Descripcion = document.getString("descripcion");
                                 Log.d(ConstraintLayoutStates.TAG, "Documento encontrado");
-                                callback.onInfoCargada(true);
+                                callback.InfoCargada(true);
                             } else {
-                                callback.onInfoCargada(false);
+                                callback.InfoCargada(false);
                             }
                         } else {
                             callback.onError("Error en consulta");
@@ -89,7 +89,7 @@ public class TipoImplemento implements CallbackTipoImplemento {
     }
 
     @Override
-    public void onInfoCargada(boolean estado) {
+    public void InfoCargada(boolean estado) {
 
     }
 }
