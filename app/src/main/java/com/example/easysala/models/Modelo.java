@@ -25,6 +25,9 @@ public class Modelo implements CallbackModelo {
         MarcaModelo = marcaModelo;
     }
 
+    public Modelo() {
+    }
+
     public Modelo(String idModelo) {
         IdModelo = idModelo;
     }
@@ -51,6 +54,20 @@ public class Modelo implements CallbackModelo {
 
     public void setMarcaModelo(Marca marcaModelo) {
         MarcaModelo = marcaModelo;
+    }
+
+    public void obtenerCantidadModelos() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("modelo_implemento")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("CANTIDAD MODELOS", String.valueOf(task.getResult().size()));
+                        }
+                    }
+                });
     }
 
     public void obtenerInfo(CallbackModelo callback) {
