@@ -15,6 +15,7 @@ import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Modelo;
 import com.example.easysala.models.TipoImplemento;
 import com.example.easysala.models.Usuarios;
+import com.example.easysala.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user  = mAuth.getCurrentUser();
 

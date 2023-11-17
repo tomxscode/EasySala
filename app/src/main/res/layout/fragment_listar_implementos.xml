@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="10dp"
-    >
-    <GridLayout
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/list_implementos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="horizontal">
 
-        >
         <Spinner
-            android:id="@+id/sp_filtro_tipo"
-            >
-        </Spinner>
+            android:id="@+id/spinner_modelo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
         <Spinner
-            android:id="@+id/sp_filtro_modelo"
-            >
-        </Spinner>
+            android:id="@+id/spinner_tipo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
         <Button
-            android:id="@+id/btnFiltrar"
-            android:text="Filtrar"
-            >
-        </Button>
-    </GridLayout>
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+            android:id="@+id/btn_filtrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filtrar"/>
 
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 </LinearLayout>
