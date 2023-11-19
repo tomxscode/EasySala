@@ -1,6 +1,7 @@
 package com.example.easysala;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,6 +38,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setTitle("Iniciar sesión");
+        //Oculta la barra que aparece arriba al iniciar la aplicacion
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         // Integración de firebase Auth
          mAuth = FirebaseAuth.getInstance();
