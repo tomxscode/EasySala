@@ -1,22 +1,31 @@
 package com.example.easysala.models;
 
-public class TipoSala {
+import androidx.annotation.NonNull;
 
-    private int IdTipoSala;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class TipoSala  implements  CallbackTipoSala{
+
+    private String IdTipoSala;
     private String NombreTipoSala;
     private String Descripcion;
 
-    public TipoSala(int idTipoSala, String nombreTipoSala, String descripcion) {
+    public TipoSala(String idTipoSala, String nombreTipoSala, String descripcion) {
         IdTipoSala = idTipoSala;
         NombreTipoSala = nombreTipoSala;
         Descripcion = descripcion;
     }
 
-    public int getIdTipoSala() {
+    public TipoSala(String idTipoSala){IdTipoSala = idTipoSala;}
+
+    public String getIdTipoSala() {
         return IdTipoSala;
     }
 
-    public void setIdTipoSala(int idTipoSala) {
+    public void setIdTipoSala(String idTipoSala) {
         IdTipoSala = idTipoSala;
     }
 
@@ -34,5 +43,44 @@ public class TipoSala {
 
     public void setDescripcion(String descripcion) {
         Descripcion = descripcion;
+    }
+
+    public void obtenerInfo(CallbackTipoSala callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(("tipo_sala"))
+                .document(getIdTipoSala())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                        if (task.isSuccessful()) {
+
+                            DocumentSnapshot document = task.getResult();
+
+                            if (document.exists()) {
+                                NombreTipoSala = document.getString("nombre");
+                                Descripcion = document.getString("descripcion");
+                                callback.onObtenerInfo(true);
+                            } else {
+                                callback.onObtenerInfo(false);
+                            }
+                        } else {
+                            callback.onError("Error en consulta");
+                        }
+                    }
+                });
+    }
+
+
+    @Override
+    public void onError(String error) {
+
+    }
+
+    @Override
+    public void onObtenerInfo(boolean encontrado) {
+
     }
 }

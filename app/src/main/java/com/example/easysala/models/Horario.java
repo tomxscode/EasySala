@@ -1,8 +1,18 @@
 package com.example.easysala.models;
 
-public class Horario {
+import android.util.Log;
 
-    private int IdHorario;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+public class Horario implements CallbackHorario {
+
+    private String IdHorario;
 
     private boolean Disponibilidad;
 
@@ -14,13 +24,15 @@ public class Horario {
 
 
 
-    public Horario(int idHorario, boolean disponibilidad, Bloque bloqueHorario, Dia diaHorario, Salas salaHorario) {
+    public Horario(String idHorario, boolean disponibilidad, Bloque bloqueHorario, Dia diaHorario, Salas salaHorario) {
         IdHorario = idHorario;
         Disponibilidad = disponibilidad;
         BloqueHorario = bloqueHorario;
         DiaHorario = diaHorario;
         SalaHorario = salaHorario;
     }
+
+    public Horario(String idHorario){IdHorario = idHorario;}
 
     public Salas getSalaHorario() {
         return SalaHorario;
@@ -30,11 +42,11 @@ public class Horario {
         SalaHorario = salaHorario;
     }
 
-    public int getIdHorario() {
+    public String getIdHorario() {
         return IdHorario;
     }
 
-    public void setIdHorario(int idHorario) {
+    public void setIdHorario(String idHorario) {
         IdHorario = idHorario;
     }
 
@@ -60,5 +72,106 @@ public class Horario {
 
     public void setDiaHorario(Dia diaHorario) {
         DiaHorario = diaHorario;
+    }
+
+
+    public void obtenerInfo(CallbackHorario callback){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("sala").document(this.getIdHorario());
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+
+                        String f_bloque = document.getString("bloque");
+                        String f_dia = document.getString("dia");
+                        String f_sala = document.getString("sala");
+                        Bloque bloque = new Bloque(f_bloque);
+                        Dia dia = new Dia(f_dia);
+                        Salas sala = new Salas(f_sala);
+
+
+                        bloque.obtenerInfo(new CallbackBloque() {
+                            @Override
+                            public void onError(String mensaje) {
+                                callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
+                                callback.onObtenerInfo(false);
+                            }
+                            @Override
+                            public void onObtenerInfo(boolean estado) {
+
+                                if (estado) {
+                                    setBloqueHorario(bloque);
+
+                                } else {
+                                    setBloqueHorario(null);
+                                }
+                                // Llamada al callback para indicar que la información del modelo se cargó
+                            }
+                        });
+
+                        dia.obtenerInfo(new CallbackDia() {
+                            @Override
+                            public void onError(String mensaje) {
+                                callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
+                                callback.onObtenerInfo(false);
+                            }
+
+                            @Override
+                            public void onObtenerInfo(boolean estado) {
+                                if(estado){
+                                    setDiaHorario(dia);
+
+                                }else{
+                                    setDiaHorario(null);
+                                }
+                            }
+                        });
+
+                        sala.obtenerInfo(new CallbackSala() {
+                            @Override
+                            public void onError(String error) {
+
+                            }
+
+                            @Override
+                            public void onObtenerInfo(boolean encontrado) {
+                                if(encontrado){
+                                   setSalaHorario(sala);
+                                    callback.onObtenerInfo(true);
+                                }else{
+                                    setSalaHorario(null);
+                                }
+                            }
+                        });
+
+                    } else {
+                        // Llamada al callback para indicar que la información no fue cargada
+                        callback.onObtenerInfo(false);
+
+                    }
+                } else {
+                    // Llamada al callback para manejar errores generales de consulta
+                    callback.onError("Error en consulta: " + task.getException().getMessage());
+                    callback.onObtenerInfo(false);
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public void onError(String mensaje) {
+
+    }
+
+    @Override
+    public void onObtenerInfo(boolean encontrado) {
+
     }
 }

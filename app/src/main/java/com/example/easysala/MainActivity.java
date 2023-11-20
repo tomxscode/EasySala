@@ -7,13 +7,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.easysala.models.Bloque;
+import com.example.easysala.models.CallbackBloque;
+import com.example.easysala.models.CallbackDia;
+import com.example.easysala.models.CallbackHorario;
 import com.example.easysala.models.CallbackImplemento;
 import com.example.easysala.models.CallbackModelo;
+import com.example.easysala.models.CallbackSala;
 import com.example.easysala.models.CallbackTipoImplemento;
+import com.example.easysala.models.CallbackTipoSala;
+import com.example.easysala.models.CallbackTipoinmobiliario;
 import com.example.easysala.models.CallbackUsuario;
+import com.example.easysala.models.Dia;
+import com.example.easysala.models.Horario;
 import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Modelo;
+import com.example.easysala.models.Salas;
 import com.example.easysala.models.TipoImplemento;
+import com.example.easysala.models.TipoInmobiliario;
+import com.example.easysala.models.TipoSala;
 import com.example.easysala.models.Usuarios;
 import com.example.easysala.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -80,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
                                 sesionIniciada = true;
                                 //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
 
-                                Implementos modelo = new Implementos("hleSsOrfwsheXPSDDiML");
-                                modelo.obtenerInfo(new CallbackImplemento(){
+                                Horario modelo = new Horario("zUXo2twbeCqDF4OYNQXE");
+                                modelo.obtenerInfo(new CallbackHorario(){
                                     @Override
-                                    public void onInfoCargada(boolean estado) {
+                                    public void onObtenerInfo(boolean estado) {
                                         if (estado) {
-                                            Toast.makeText(MainActivity.this, "Implemento cargado " + modelo.getModeloImplemento().getNombreModelo() + modelo.getTipoImplemento().getNombreTipoImplemento(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Tipo de inmobiliario: " + modelo.getBloqueHorario().getHoraFin(), Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
                                         }
