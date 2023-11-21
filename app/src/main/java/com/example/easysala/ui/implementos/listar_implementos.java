@@ -19,7 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.example.easysala.R;
 import com.example.easysala.models.CallbackMarca;
 import com.example.easysala.models.CallbackTipoImplemento;
+import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Marca;
+import com.example.easysala.models.Modelo;
 import com.example.easysala.models.TipoImplemento;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +38,7 @@ public class listar_implementos extends Fragment {
 
     private ListView listViewImplementos;
     private ArrayList<String> listaImplementos;
+    private ArrayList<Implementos> implementosInfo;
     private Spinner spinnerMarcas;
 
     HashMap<String, String> mapeoMarcas = new HashMap<>();
@@ -46,8 +49,9 @@ public class listar_implementos extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listar_implementos, container, false);
         listViewImplementos = view.findViewById(R.id.list_implementos);
         listaImplementos = new ArrayList<>();
+        implementosInfo = new ArrayList<>();
         spinnerMarcas = view.findViewById(R.id.spinner_modelo);
-        retornarListaUsuariosFirebase();
+        //retornarListaUsuariosFirebase();
         poblarSpinnerMarcas();
 
         spinnerMarcas.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -68,7 +72,6 @@ public class listar_implementos extends Fragment {
 
             }
         });
-
         return view;
     }
 
@@ -125,6 +128,7 @@ public class listar_implementos extends Fragment {
 
     public void limpiarListaImplementos() {
         listaImplementos.clear();
+        implementosInfo.clear();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaImplementos);
         listViewImplementos.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -151,11 +155,41 @@ public class listar_implementos extends Fragment {
                         String nombre = documento.getData().get("nombre").toString();
                         String tipo = documento.getData().get("tipo").toString();
                         String ubicacion = documento.getData().get("ubicacion").toString();
+                        Implementos nuevoImplemento = new Implementos(idImplemento, nombre, ubicacion, cantidad, descripcion, new Modelo(modelo), new TipoImplemento(tipo));
+                        implementosInfo.add(nuevoImplemento);
                         listaImplementos.add(nombre + ". Disponibles " + cantidad + " unidades");
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaImplementos);
                     listViewImplementos.setAdapter(adapter);
+                    listViewImplementos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                            Implementos implementoActual = implementosInfo.get(position);
+                            alertDialog.setTitle(implementoActual.getNombreImplemento());
+                            alertDialog.setMessage("Información del implemento:\n" +
+                                    "\tDisponibles: " + implementoActual.getCantidad() + "\n" +
+                                    "\tUbicación: " + implementoActual.getUbicacion() + "\n" +
+                                    "\t'" + implementoActual.getDescripcion() + "'\n" +
+                                    "** Otra información relevante **\n" +
+                                    "\tMarca y modelo: " + implementoActual.getModeloImplemento().getMarcaModelo() + " " + implementoActual.getModeloImplemento() + "\n" +
+                                    "\tTipo: " + implementoActual.getTipoImplemento());
+                            // Botón de aceptar, con texto: Reservar
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reservar", (dialog, which) -> {
+                                dialog.dismiss();
+                                AlertDialog alertDialog2 = new AlertDialog.Builder(requireContext()).create();
+                                alertDialog2.setTitle("Reserva");
+                                alertDialog2.setMessage("Implemento reservado");
+                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog2, which2) -> {
+                                    dialog2.dismiss();
+                                });
+                            });
+
+                            alertDialog.show();
+                            Toast.makeText(requireContext(), "Implemento seleccionado " + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     progressDialog.dismiss();
                 } else {
                     progressDialog.dismiss();
