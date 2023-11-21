@@ -75,10 +75,9 @@ public class Horario implements CallbackHorario {
     }
 
 
-    public void obtenerInfo(CallbackHorario callback){
-
+    public void obtenerInfo(CallbackHorario callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("sala").document(this.getIdHorario());
+        DocumentReference docRef = db.collection("horario").document(this.getIdHorario());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -87,47 +86,45 @@ public class Horario implements CallbackHorario {
                     DocumentSnapshot document = task.getResult();
 
                     if (document.exists()) {
-
                         String f_bloque = document.getString("bloque");
                         String f_dia = document.getString("dia");
                         String f_sala = document.getString("sala");
+
                         Bloque bloque = new Bloque(f_bloque);
                         Dia dia = new Dia(f_dia);
                         Salas sala = new Salas(f_sala);
 
+                        Log.d("Horario", "Document data: " + document.getData());
 
                         bloque.obtenerInfo(new CallbackBloque() {
                             @Override
                             public void onError(String mensaje) {
-                                callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
+                                callback.onError(mensaje);
                                 callback.onObtenerInfo(false);
                             }
+
                             @Override
                             public void onObtenerInfo(boolean estado) {
-
                                 if (estado) {
                                     setBloqueHorario(bloque);
-
                                 } else {
                                     setBloqueHorario(null);
                                 }
-                                // Llamada al callback para indicar que la información del modelo se cargó
                             }
                         });
 
                         dia.obtenerInfo(new CallbackDia() {
                             @Override
                             public void onError(String mensaje) {
-                                callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
+                                callback.onError(mensaje);
                                 callback.onObtenerInfo(false);
                             }
 
                             @Override
                             public void onObtenerInfo(boolean estado) {
-                                if(estado){
+                                if (estado) {
                                     setDiaHorario(dia);
-
-                                }else{
+                                } else {
                                     setDiaHorario(null);
                                 }
                             }
@@ -136,33 +133,31 @@ public class Horario implements CallbackHorario {
                         sala.obtenerInfo(new CallbackSala() {
                             @Override
                             public void onError(String error) {
-
+                                // Puedes manejar el error aquí si es necesario
                             }
 
                             @Override
                             public void onObtenerInfo(boolean encontrado) {
-                                if(encontrado){
-                                   setSalaHorario(sala);
+                                if (encontrado) {
+                                    setSalaHorario(sala);
                                     callback.onObtenerInfo(true);
-                                }else{
+                                } else {
                                     setSalaHorario(null);
                                 }
                             }
                         });
 
                     } else {
-                        // Llamada al callback para indicar que la información no fue cargada
                         callback.onObtenerInfo(false);
-
                     }
                 } else {
-                    // Llamada al callback para manejar errores generales de consulta
                     callback.onError("Error en consulta: " + task.getException().getMessage());
                     callback.onObtenerInfo(false);
                 }
             }
         });
     }
+
 
 
     @Override
