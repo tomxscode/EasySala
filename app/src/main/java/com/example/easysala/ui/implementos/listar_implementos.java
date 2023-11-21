@@ -1,5 +1,7 @@
 package com.example.easysala.ui.implementos;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +37,16 @@ public class listar_implementos extends Fragment {
     }
 
     public void retornarListaUsuariosFirebase() {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Cargando implementos...");
+        progressDialog.setMessage("Espere unos segundos...");
+        progressDialog.show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("implemento").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                // Mensaje de cargando
+
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot documento : task.getResult()) {
                         String idImplemento = documento.getId();
@@ -54,6 +62,20 @@ public class listar_implementos extends Fragment {
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaImplementos);
                     listViewImplementos.setAdapter(adapter);
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    // Alert Dialog informando que no se obtuvieron implementos
+                    AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("No se pudieron obtener los implementos");
+                    // Botón de aceptar que te lleva al MainActivity
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
+                        dialog.dismiss();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    });
+                    alertDialog.show();
+
                 }
             }
         });
