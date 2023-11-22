@@ -7,31 +7,55 @@
     android:backgroundTint="#00B8D4"
     tools:context=".LoginActivity">
 
-    <EditText
-        android:id="@+id/txt_login_pass"
-        android:layout_width="247dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="28dp"
-        android:backgroundTint="#0091EA"
-        android:ems="10"
-        android:hint="contraseña"
-        android:inputType="text|textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_login_correo" />
-
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txt_login_correo"
-        android:layout_width="247dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="80dp"
-        android:backgroundTint="#0091EA"
-        android:ems="10"
-        android:hint="john.doe@virginiogomez.cl"
-        android:inputType="text|textEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginEnd="32dp"
+        app:boxBackgroundMode="outline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="john.doe@virginiogomez.cl"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:helperText="Ingrese su correo institucional"
+        app:endIconMode="clear_text"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txt_login_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="300dp"
+        android:layout_marginEnd="32dp"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="Contraseña"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxCornerRadiusTopEnd="10dp"
+        app:boxCornerRadiusTopStart="10dp"
+        app:helperText="Ingrese su contraseña"
+        app:endIconMode="password_toggle"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_login_ini"
@@ -57,10 +81,10 @@
         android:text="Registrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.72"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_login_ini"
-        app:layout_constraintVertical_bias="0.111" />
+        app:layout_constraintVertical_bias="0.14" />
 
     <ImageView
         android:id="@+id/imageView"

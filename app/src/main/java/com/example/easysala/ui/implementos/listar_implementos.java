@@ -104,7 +104,6 @@ public class listar_implementos extends Fragment {
                 spinnerMarcas.setAdapter(adapter);
 
             } else {
-
                 // Manejar error
                 AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
                 alertDialog.setTitle("Error");

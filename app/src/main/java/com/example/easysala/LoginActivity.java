@@ -18,6 +18,8 @@ import com.example.easysala.models.CallbackUsuario;
 import com.example.easysala.models.Usuarios;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    EditText email, password;
+    String email, password;
     Button btnLogin;
     Button btnRegistrar;
 
@@ -45,16 +47,20 @@ public class LoginActivity extends AppCompatActivity {
         // Integración de firebase Auth
          mAuth = FirebaseAuth.getInstance();
 
-         email = findViewById(R.id.txt_login_correo);
-         password  = findViewById(R.id.txt_login_pass);
+         TextInputLayout textInputLayout = findViewById(R.id.txt_login_correo);
+         EditText editText = (EditText) textInputLayout.getEditText();
+        TextInputLayout textInputLayoutpass = findViewById(R.id.txt_login_pass);
+        EditText editTextpass = (EditText) textInputLayoutpass.getEditText();
+         email = editTextpass.getText().toString();
+         password  = editTextpass.getText().toString();
          btnRegistrar = findViewById(R.id.btn_login_reg);
          btnLogin = findViewById(R.id.btn_login_ini);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {;
-                String emailTxt = email.getText().toString();
-                String passTxt = password.getText().toString();
+                String emailTxt = email;
+                String passTxt = password;
                 // Comprobación que los campos no estén vacíos
                 if (emailTxt.isEmpty() || passTxt.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT).show();
@@ -113,8 +119,8 @@ public class LoginActivity extends AppCompatActivity {
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 String emailTxt = email.getText().toString();
-                 String passTxt = password.getText().toString();
+                 String emailTxt = email;
+                 String passTxt = password;
                  String nombre = emailTxt.substring(0, emailTxt.indexOf("."));
                  String apellido = emailTxt.substring(emailTxt.indexOf(".") + 1, emailTxt.indexOf("@"));
 
