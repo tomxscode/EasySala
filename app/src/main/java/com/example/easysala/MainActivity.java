@@ -101,14 +101,14 @@ public class MainActivity extends AppCompatActivity {
                                     public void onObtenerInfo(boolean estado) {
                                         if (estado) {
                                             // Alert Dialog que muestre la información de la sala, horario y dia
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                            builder.setTitle("Información");
-                                            builder.setMessage("Sala: " + modelo.getSalaHorario().getNombreSala() + "\n" +
-                                                    "Hora Inicio: " + modelo.getBloqueHorario().getHoraInicio() + "\n" +
-                                                    "Hora Fin: " + modelo.getBloqueHorario().getHoraFin() + "\n" +
-                                                    "Dia: " + modelo.getDiaHorario().getNombre());
-                                            builder.setPositiveButton("Aceptar", null);
-                                            builder.show();
+                                            //AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                            //builder.setTitle("Información");
+                                            //builder.setMessage("Sala: " + modelo.getSalaHorario().getNombreSala() + "\n" +
+                                                            //      "Hora Inicio: " + modelo.getBloqueHorario().getHoraInicio() + "\n" +
+                                                    // "Hora Fin: " + modelo.getBloqueHorario().getHoraFin() + "\n" +
+                                            //        "Dia: " + modelo.getDiaHorario().getNombre());
+                                            //builder.setPositiveButton("Aceptar", null);
+                                            //builder.show();
 
                                             //Toast.makeText(MainActivity.this, "Tipo de inmobiliario: " + modelo.getBloqueHorario().getHoraFin(), Toast.LENGTH_SHORT).show();
                                         } else {
