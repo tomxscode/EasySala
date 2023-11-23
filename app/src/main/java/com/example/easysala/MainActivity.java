@@ -12,31 +12,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.easysala.models.Bloque;
-import com.example.easysala.models.CallbackBloque;
-import com.example.easysala.models.CallbackDia;
 import com.example.easysala.models.CallbackHorario;
-import com.example.easysala.models.CallbackImplemento;
-import com.example.easysala.models.CallbackModelo;
-import com.example.easysala.models.CallbackSala;
-import com.example.easysala.models.CallbackTipoImplemento;
-import com.example.easysala.models.CallbackTipoSala;
-import com.example.easysala.models.CallbackTipoinmobiliario;
 import com.example.easysala.models.CallbackUsuario;
-import com.example.easysala.models.Dia;
 import com.example.easysala.models.Horario;
-import com.example.easysala.models.Implementos;
-import com.example.easysala.models.Modelo;
-import com.example.easysala.models.Salas;
-import com.example.easysala.models.TipoImplemento;
-import com.example.easysala.models.TipoInmobiliario;
-import com.example.easysala.models.TipoSala;
 import com.example.easysala.models.Usuarios;
-import com.example.easysala.ui.home.HomeFragment;
+import com.example.easysala.ui.dashboard.DashboardFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,9 +32,15 @@ import com.example.easysala.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+
     private FirebaseAuth mAuth;
     private ActivityMainBinding binding;
+
+    List<ListElement> elements;
 
     public static Usuarios usuarioActual;
     public static boolean sesionIniciada = false;
@@ -58,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = new DashboardFragment();
+        fm.beginTransaction().add(R.id.nav_host_fragment_activity_main, fragment);
+
+
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -163,5 +161,7 @@ public class MainActivity extends AppCompatActivity {
         toast.setView(v);
         toast.show();
     }
+
+
 
 }
