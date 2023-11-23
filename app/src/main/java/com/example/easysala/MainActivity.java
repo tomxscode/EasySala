@@ -5,6 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easysala.models.Bloque;
@@ -70,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         // Usuario actual
         if (user != null) {
             if (sesionIniciada) {
-                Toast.makeText(this, "Sesión iniciada", Toast.LENGTH_SHORT).show();
+                toast_ok("Sesión iniciada correctamente");
                 
             } else {
                 usuarioActual = new Usuarios(user.getUid());
@@ -146,6 +151,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+    }
+    public void toast_ok(String msg){
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View v = layoutInflater.inflate(R.layout.custom_toast_ok, (ViewGroup) findViewById(R.id.ll_custom_toast_ok));
+        TextView txtMensaje = v.findViewById(R.id.txtMensajeToastOk);
+        txtMensaje.setText(msg);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.BOTTOM, 0,200);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(v);
+        toast.show();
     }
 
 }

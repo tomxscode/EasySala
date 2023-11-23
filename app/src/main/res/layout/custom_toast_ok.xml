@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_custom_toast_ok"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_blue"
+    android:layout_gravity="center|center_horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/check_icon"
+        />
+    <TextView
+        android:id="@+id/txtMensajeToastOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/doppio_one"
+        android:textStyle="normal"
+        android:paddingStart="10dp"
+        android:textAlignment="center"
+        android:text="Sesion iniciada correctamente"
+        android:textColor="#000"
+        android:paddingTop="3dp"
+        />
+
+</LinearLayout>

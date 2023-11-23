@@ -8,10 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easysala.models.CallbackUsuario;
@@ -33,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     String email, password;
     Button btnLogin;
     Button btnRegistrar;
+    TextInputEditText editText, editTextpass;
 
 
     @Override
@@ -45,20 +50,23 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.hide();
 
         // Integración de firebase Auth
-         mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
-         TextInputLayout textInputLayout = findViewById(R.id.txt_login_correo);
-         EditText editText = (EditText) textInputLayout.getEditText();
+        TextInputLayout textInputLayout = findViewById(R.id.txt_login_correo);
+        editText = (TextInputEditText) textInputLayout.getEditText();
         TextInputLayout textInputLayoutpass = findViewById(R.id.txt_login_pass);
-        EditText editTextpass = (EditText) textInputLayoutpass.getEditText();
-         email = editTextpass.getText().toString();
-         password  = editTextpass.getText().toString();
-         btnRegistrar = findViewById(R.id.btn_login_reg);
-         btnLogin = findViewById(R.id.btn_login_ini);
+        editTextpass = (TextInputEditText) textInputLayoutpass.getEditText();
+        password = editTextpass.getText().toString();
+        btnRegistrar = findViewById(R.id.btn_login_reg);
+        btnLogin = findViewById(R.id.btn_login_ini);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {;
+            public void onClick(View v) {
+                email = editText.getText().toString();
+                password = editTextpass.getText().toString();
+
                 String emailTxt = email;
                 String passTxt = password;
                 // Comprobación que los campos no estén vacíos
@@ -74,10 +82,12 @@ public class LoginActivity extends AppCompatActivity {
                 mAuth.signInWithEmailAndPassword(emailTxt, passTxt)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             ProgressDialog dialogCargando = ProgressDialog.show(LoginActivity.this, "Espere...", "Estamos verificando la información");
+
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Inicio de sesión exitoso
+
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     // uid del usuario
                                     String uid = user.getUid();
@@ -98,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     startActivity(pagPrincipal);
                                                 } else {
                                                     mAuth.signOut();
-                                                    AlertDialog .Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                                     builder.setTitle("Información");
                                                     builder.setMessage("Tu cuenta está deshabilitada, por favor contacta con el administrador");
                                                     builder.setPositiveButton("Aceptar", null);
@@ -117,39 +127,40 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 String emailTxt = email;
-                 String passTxt = password;
-                 String nombre = emailTxt.substring(0, emailTxt.indexOf("."));
-                 String apellido = emailTxt.substring(emailTxt.indexOf(".") + 1, emailTxt.indexOf("@"));
+            @Override
+            public void onClick(View v) {
+                String emailTxt = email;
+                String passTxt = password;
+                String nombre = emailTxt.substring(0, emailTxt.indexOf("."));
+                String apellido = emailTxt.substring(emailTxt.indexOf(".") + 1, emailTxt.indexOf("@"));
 
-                 mAuth.createUserWithEmailAndPassword(emailTxt, passTxt)
-                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                             @Override
-                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                 if (task.isSuccessful()) {
-                                     // Creación de usuario exitosa
-                                     Toast.makeText(LoginActivity.this, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
+                mAuth.createUserWithEmailAndPassword(emailTxt, passTxt)
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Creación de usuario exitosa
+                                    Toast.makeText(LoginActivity.this, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
 
-                                     // Crear el objeto Usuarios
-                                     MainActivity.usuarioActual = new Usuarios(nombre, apellido, emailTxt, 1, mAuth.getUid(), false);
-                                     // Agregar a la BD
-                                     MainActivity.usuarioActual.guardarBd();
+                                    // Crear el objeto Usuarios
+                                    MainActivity.usuarioActual = new Usuarios(nombre, apellido, emailTxt, 1, mAuth.getUid(), false);
+                                    // Agregar a la BD
+                                    MainActivity.usuarioActual.guardarBd();
 
-                                     // Iniciar la actividad principal (MainActivity)
-                                     Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
-                                     startActivity(pagPrincipal);
-                                     finish();
-                                 } else {
-                                     // Error en la creación del usuario
-                                     Toast.makeText(LoginActivity.this, "Error al crear el usuario", Toast.LENGTH_SHORT).show();
-                                 }
-                             }
-                         });
-             }
-         });
+                                    // Iniciar la actividad principal (MainActivity)
+                                    Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(pagPrincipal);
+                                    finish();
+                                } else {
+                                    // Error en la creación del usuario
+                                    Toast.makeText(LoginActivity.this, "Error al crear el usuario", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
     }
+
 
     @Override
     public void onStart() {
