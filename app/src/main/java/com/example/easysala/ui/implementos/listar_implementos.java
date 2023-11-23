@@ -1,6 +1,7 @@
 package com.example.easysala.ui.implementos;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -180,62 +183,122 @@ public class listar_implementos extends Fragment {
                             // Botón de aceptar, con texto: Reservar
                             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reservar", (dialog, which) -> {
                                 dialog.dismiss();
-                                AlertDialog alertDialog2 = new AlertDialog.Builder(requireContext()).create();
-                                alertDialog2.setTitle("Confirmar reserva de " + implementoActual.getNombreImplemento() + "?");
-                                alertDialog2.setMessage("Al pulsar 'Confirmar', aceptas reservar el implemento seleccionado." +
-                                        "\nEsta acción será revisada y aprobada manualmente por el personal correspondiente.");
-                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "Confirmar", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String implementoIdActual = implementoActual.getIdImplemento();
-                                        // Obtener fecha de hoy en formato Date
-                                        Date fechaHoy = new Date();
-                                        // Obtener fecha de mañana
-                                        Date fechaManana = new Date(fechaHoy.getTime() + (24 * 60 * 60 * 1000));
-                                        ReservaImplemento nuevaReserva = new ReservaImplemento(fechaHoy, fechaHoy, fechaManana, new Implementos(implementoIdActual), MainActivity.usuarioActual, false, false);
-                                        nuevaReserva.setImplemento(implementoActual);
-                                        dialog.dismiss();
-                                        ProgressDialog  progressDialog = new ProgressDialog(requireContext());
-                                        progressDialog.setTitle("Cargando...");
-                                        progressDialog.setMessage("Espere unos segundos...");
-                                        progressDialog.show();
-                                        nuevaReserva.crearReserva(new CallbackReservaImplemento() {
-                                            @Override
-                                            public void onError(String mensaje) {
+                                AlertDialog  alertDialog1 = new AlertDialog.Builder(requireContext()).create();
+                                alertDialog1.setTitle("Seleccionar fecha de reserva");
+                                alertDialog1.setMessage("Por favor, seleccione una fecha de reserva en la siguiente pantalla.");
+                                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "Ir a seleccionar", (dialog1, which1) -> {
+                                    Calendar calendario = Calendar.getInstance();
+                                    int year = calendario.get(Calendar.YEAR);
+                                    int month = calendario.get(Calendar.MONTH);
+                                    int day = calendario.get(Calendar.DAY_OF_MONTH);
+                                    DatePickerDialog fechaReserva = new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                            Calendar fechaSeleccionadaReserva = Calendar.getInstance();
+                                            fechaSeleccionadaReserva.set(year, month, dayOfMonth);
+                                            if (fechaSeleccionadaReserva.before(calendario)) {
                                                 AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
                                                 alertDialog.setTitle("Error");
-                                                alertDialog.setMessage(mensaje);
+                                                alertDialog.setMessage("La fecha seleccionada es anterior a la fecha actual." +
+                                                        "\nPor favor, seleccione una fecha posterior a la fecha actual.\n" +
+                                                        "Re-intenta");
                                                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
                                                     dialog.dismiss();
                                                 });
                                                 alertDialog.show();
-                                            }
+                                            } else {
+                                                AlertDialog  alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                alertDialog.setTitle("Seleccionar fecha de devolución");
+                                                alertDialog.setMessage("Por favor, seleccione una fecha de devolución en la siguiente pantalla.");
+                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ir a seleccionar", (dialog1, which1) -> {
+                                                    DatePickerDialog  fechaDevolucion = new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+                                                        @Override
+                                                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                                            // Comprobar que la fecha seleccionada es igual o superior a la de la reserva
+                                                            Calendar fechaSeleccionadaDevolucion = Calendar.getInstance();
+                                                            fechaSeleccionadaDevolucion.set(year, month, dayOfMonth);
+                                                            if (fechaSeleccionadaDevolucion.before(fechaSeleccionadaReserva)) {
+                                                                AlertDialog  alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                                alertDialog.setTitle("Error");
+                                                                alertDialog.setMessage("La fecha seleccionada es anterior a la fecha de reserva." +
+                                                                        "\nPor favor, seleccione una fecha posterior a la fecha de reserva.\n" +
+                                                                        "Re-intenta");
+                                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Re-intentar", (dialog, which) -> {
+                                                                    dialog.dismiss();
+                                                                });
+                                                                alertDialog.show();
+                                                            } else {
+                                                                AlertDialog alertDialog2 = new AlertDialog.Builder(requireContext()).create();
+                                                                alertDialog2.setTitle("Confirmar reserva de " + implementoActual.getNombreImplemento() + "?");
+                                                                alertDialog2.setMessage("Al pulsar 'Confirmar', aceptas reservar el implemento seleccionado." +
+                                                                        "\nEsta acción será revisada y aprobada manualmente por el personal correspondiente.");
+                                                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "Confirmar", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                        String implementoIdActual = implementoActual.getIdImplemento();
+                                                                        // Obtener fecha de hoy en formato Date
+                                                                        Date fechaHoy = new Date();
+                                                                        // Obtener fecha de mañana
+                                                                        Date fechaReserva = fechaSeleccionadaReserva.getTime();
+                                                                        Date fechaDevolucion = fechaSeleccionadaDevolucion.getTime();
 
-                                            @Override
-                                            public void onInfoEncontrada(boolean estado) {
-                                            }
+                                                                        ReservaImplemento nuevaReserva = new ReservaImplemento(fechaHoy, fechaReserva, fechaDevolucion, new Implementos(implementoIdActual), MainActivity.usuarioActual, false, false);
+                                                                        nuevaReserva.setImplemento(implementoActual);
+                                                                        dialog.dismiss();
+                                                                        ProgressDialog  progressDialog = new ProgressDialog(requireContext());
+                                                                        progressDialog.setTitle("Cargando...");
+                                                                        progressDialog.setMessage("Espere unos segundos...");
+                                                                        progressDialog.show();
+                                                                        nuevaReserva.crearReserva(new CallbackReservaImplemento() {
+                                                                            @Override
+                                                                            public void onError(String mensaje) {
+                                                                                AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                                                alertDialog.setTitle("Error");
+                                                                                alertDialog.setMessage(mensaje);
+                                                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
+                                                                                    dialog.dismiss();
+                                                                                });
+                                                                                alertDialog.show();
+                                                                            }
 
-                                            @Override
-                                            public void onReservaRealizada(boolean estado) {
-                                                if (estado) {
-                                                    progressDialog.dismiss();
-                                                    AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
-                                                    alertDialog.setTitle("Reserva realizada");
-                                                    alertDialog.setMessage("¡Tu reserva fue realizada con éxito!\n" +
-                                                            "Se te informará a la brevedad si la reserva fue aprobada.");
-                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
-                                                        dialog.dismiss();
-                                                        getActivity().getSupportFragmentManager().popBackStack();
-                                                    });
-                                                    alertDialog.show();
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                }
+                                                                            @Override
+                                                                            public void onInfoEncontrada(boolean estado) {
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onReservaRealizada(boolean estado) {
+                                                                                if (estado) {
+                                                                                    progressDialog.dismiss();
+                                                                                    AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                                                    alertDialog.setTitle("Reserva realizada");
+                                                                                    alertDialog.setMessage("¡Tu reserva fue realizada con éxito!\n" +
+                                                                                            "Se te informará a la brevedad si la reserva fue aprobada.");
+                                                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
+                                                                                        dialog.dismiss();
+                                                                                        getActivity().getSupportFragmentManager().popBackStack();
+                                                                                    });
+                                                                                    alertDialog.show();
+                                                                                } else {
+                                                                                    progressDialog.dismiss();
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                                alertDialog2.show();
+                                                            }
+
+                                                        }
+                                                    }, year, month, dayOfMonth);
+                                                    fechaDevolucion.show();
+                                                });
+                                                alertDialog.show();
                                             }
-                                        });
-                                    }
+                                        }
+                                    }, year, month, day);
+                                    fechaReserva.show();
                                 });
-                                alertDialog2.show();
+                                alertDialog1.show();
                             });
 
                             alertDialog.show();
