@@ -2,7 +2,9 @@ package com.example.easysala.ui.implementos;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +18,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.easysala.MainActivity;
 import com.example.easysala.R;
 import com.example.easysala.models.CallbackMarca;
+import com.example.easysala.models.CallbackReservaImplemento;
 import com.example.easysala.models.CallbackTipoImplemento;
 import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Marca;
 import com.example.easysala.models.Modelo;
+import com.example.easysala.models.ReservaImplemento;
 import com.example.easysala.models.TipoImplemento;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +36,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -170,19 +176,66 @@ public class listar_implementos extends Fragment {
                             alertDialog.setMessage("Información del implemento:\n" +
                                     "\tDisponibles: " + implementoActual.getCantidad() + "\n" +
                                     "\tUbicación: " + implementoActual.getUbicacion() + "\n" +
-                                    "\t'" + implementoActual.getDescripcion() + "'\n" +
-                                    "** Otra información relevante **\n" +
-                                    "\tMarca y modelo: " + implementoActual.getModeloImplemento().getMarcaModelo() + " " + implementoActual.getModeloImplemento() + "\n" +
-                                    "\tTipo: " + implementoActual.getTipoImplemento());
+                                    "\t'" + implementoActual.getDescripcion() + "'\n");
                             // Botón de aceptar, con texto: Reservar
                             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Reservar", (dialog, which) -> {
                                 dialog.dismiss();
                                 AlertDialog alertDialog2 = new AlertDialog.Builder(requireContext()).create();
-                                alertDialog2.setTitle("Reserva");
-                                alertDialog2.setMessage("Implemento reservado");
-                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog2, which2) -> {
-                                    dialog2.dismiss();
+                                alertDialog2.setTitle("Confirmar reserva de " + implementoActual.getNombreImplemento() + "?");
+                                alertDialog2.setMessage("Al pulsar 'Confirmar', aceptas reservar el implemento seleccionado." +
+                                        "\nEsta acción será revisada y aprobada manualmente por el personal correspondiente.");
+                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "Confirmar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String implementoIdActual = implementoActual.getIdImplemento();
+                                        // Obtener fecha de hoy en formato Date
+                                        Date fechaHoy = new Date();
+                                        // Obtener fecha de mañana
+                                        Date fechaManana = new Date(fechaHoy.getTime() + (24 * 60 * 60 * 1000));
+                                        ReservaImplemento nuevaReserva = new ReservaImplemento(fechaHoy, fechaHoy, fechaManana, new Implementos(implementoIdActual), MainActivity.usuarioActual, false, false);
+                                        nuevaReserva.setImplemento(implementoActual);
+                                        dialog.dismiss();
+                                        ProgressDialog  progressDialog = new ProgressDialog(requireContext());
+                                        progressDialog.setTitle("Cargando...");
+                                        progressDialog.setMessage("Espere unos segundos...");
+                                        progressDialog.show();
+                                        nuevaReserva.crearReserva(new CallbackReservaImplemento() {
+                                            @Override
+                                            public void onError(String mensaje) {
+                                                AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                alertDialog.setTitle("Error");
+                                                alertDialog.setMessage(mensaje);
+                                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
+                                                    dialog.dismiss();
+                                                });
+                                                alertDialog.show();
+                                            }
+
+                                            @Override
+                                            public void onInfoEncontrada(boolean estado) {
+                                            }
+
+                                            @Override
+                                            public void onReservaRealizada(boolean estado) {
+                                                if (estado) {
+                                                    progressDialog.dismiss();
+                                                    AlertDialog alertDialog = new AlertDialog.Builder(requireContext()).create();
+                                                    alertDialog.setTitle("Reserva realizada");
+                                                    alertDialog.setMessage("¡Tu reserva fue realizada con éxito!\n" +
+                                                            "Se te informará a la brevedad si la reserva fue aprobada.");
+                                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Aceptar", (dialog, which) -> {
+                                                        dialog.dismiss();
+                                                        getActivity().getSupportFragmentManager().popBackStack();
+                                                    });
+                                                    alertDialog.show();
+                                                } else {
+                                                    progressDialog.dismiss();
+                                                }
+                                            }
+                                        });
+                                    }
                                 });
+                                alertDialog2.show();
                             });
 
                             alertDialog.show();
