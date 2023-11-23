@@ -50,7 +50,7 @@ public class Horario implements CallbackHorario {
         IdHorario = idHorario;
     }
 
-    public boolean isDisponibilidad() {
+    public boolean getDisponibilidad() {
         return Disponibilidad;
     }
 
@@ -85,11 +85,12 @@ public class Horario implements CallbackHorario {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
 
-                    if (document.exists()) {
+                    if (document.exists()){
+                        boolean f_dispo = document.getBoolean("disponibilidad");
                         String f_bloque = document.getString("bloque");
                         String f_dia = document.getString("dia");
                         String f_sala = document.getString("sala");
-
+                        setDisponibilidad(f_dispo);
                         Bloque bloque = new Bloque(f_bloque);
                         Dia dia = new Dia(f_dia);
                         Salas sala = new Salas(f_sala);

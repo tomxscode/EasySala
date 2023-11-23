@@ -5,13 +5,13 @@ public class ListElement {
     public String color;
     public String tipo;
     public String edificio;
-    public String estado;
+    public String disponibilidad;
 
     public ListElement(String color, String nombre, String edificio, String estado) {
         this.color = color;
         this.tipo = nombre;
         this.edificio = edificio;
-        this.estado = estado;
+        this.disponibilidad = estado;
     }
 
     public String getColor() {
@@ -39,10 +39,10 @@ public class ListElement {
     }
 
     public String getEstado() {
-        return estado;
+        return disponibilidad;
     }
 
     public void setEstado(String estado) {
-        this.estado = estado;
+        this.disponibilidad = estado;
     }
 }
