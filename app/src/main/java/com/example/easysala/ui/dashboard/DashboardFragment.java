@@ -1,5 +1,6 @@
 package com.example.easysala.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,7 +39,7 @@ public class DashboardFragment extends Fragment {
 
     RecyclerView rv;
     private FragmentDashboardBinding binding;
-    private List<ListElement> elements;
+    private List<Horario> elements;
     String disponible = "";
 
     Adapter adapter;
@@ -83,10 +85,9 @@ public class DashboardFragment extends Fragment {
                             }else{
                                 disponible = "No disponible";
                             }
-                            elements.add(new ListElement("#0C7AE8",
-                                    horario.getSalaHorario().getTipoSala().getNombreTipoSala()
-                                    ,"Sala "+horario.getSalaHorario().getNombreSala(),
-                                    disponible));
+                            elements.add(new Horario(id,true,
+                                    horario.getBloqueHorario(),horario.getDiaHorario(),
+                                    horario.getSalaHorario()));
                             listAdapter = new ListAdapter(elements, getActivity());
                             RecyclerView recyclerView = view.findViewById(R.id.ListRecyclerView);
                             recyclerView.setHasFixedSize(true);
@@ -102,9 +103,13 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }
