@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 dialogCargando.dismiss();
                                                 if (MainActivity.usuarioActual.isHabilitado()) {
                                                     MainActivity.sesionIniciada = true;
+                                                    MainActivity.rolUsuario = MainActivity.usuarioActual.getRol();
                                                     Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
                                                     startActivity(pagPrincipal);
                                                 } else {

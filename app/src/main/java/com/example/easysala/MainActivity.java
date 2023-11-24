@@ -37,6 +37,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
+    public static int rolUsuario;
     private FirebaseAuth mAuth;
     private ActivityMainBinding binding;
 
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         if (encontrado) {
                             dialogoCargando.dismiss();
                             if (usuarioActual.isHabilitado()) {
+                                MainActivity.rolUsuario = MainActivity.usuarioActual.getRol();
                                 sesionIniciada = true;
                                 //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
 
