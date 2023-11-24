@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ActivityMainBinding binding;
 
-    List<ListElement> elements;
-
     public static Usuarios usuarioActual;
     public static boolean sesionIniciada = false;
 
