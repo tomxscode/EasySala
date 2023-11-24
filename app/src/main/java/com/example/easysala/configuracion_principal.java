@@ -85,6 +85,8 @@ public class configuracion_principal extends Fragment {
                 mAuth.signOut();
                 MainActivity.usuarioActual = null;
                 Toast.makeText(getActivity(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
+                // Finalizar la actividad y volver a la pantalla de inicio de sesión
+                getActivity().finish();
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
             }
