@@ -1,6 +1,5 @@
 package com.example.easysala.ui.dashboard;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,20 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.easysala.AprobarReservas;
 import com.example.easysala.MainActivity;
 import com.example.easysala.R;
+import com.example.easysala.aprobar_reservas_impl;
 import com.example.easysala.databinding.FragmentDashboardBinding;
-import com.example.easysala.models.CallbackHorario;
 import com.example.easysala.models.Horario;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardFragment extends Fragment {
@@ -44,20 +38,25 @@ public class DashboardFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        Button btn_aprobar = view.findViewById(R.id.btn_aprobar); // Reemplaza con el ID real de tu botón
-
-        // Verifica el rol del usuario y establece la visibilidad del botón
+        Button btn_aprobar_salas = view.findViewById(R.id.btn_aprobar_salas);
+        Button btn_aprobar_implementos = view.findViewById(R.id.btn_aprobar_implementos);
         if (MainActivity.rolUsuario > 2) {
-            btn_aprobar.setVisibility(View.VISIBLE);
-            Log.d("MainActivity", "si aparece :) rol =" + MainActivity.rolUsuario);
+            btn_aprobar_salas.setVisibility(View.VISIBLE);
+            btn_aprobar_implementos.setVisibility(View.VISIBLE);
         } else {
-            btn_aprobar.setVisibility(View.GONE);
-            Log.d("MainActivity", "no aparece :( rol = " + MainActivity.rolUsuario);
+            btn_aprobar_salas.setVisibility(View.GONE);
+            btn_aprobar_implementos.setVisibility(View.GONE);
         }
-        btn_aprobar.setOnClickListener(new View.OnClickListener() {
+        btn_aprobar_salas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cargarFragmento(new AprobarReservas());
+            }
+        });
+        btn_aprobar_implementos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmento(new aprobar_reservas_impl());
             }
         });
         return view;
@@ -73,7 +72,6 @@ public class DashboardFragment extends Fragment {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null); // Opcional, para agregar a la pila de retroceso
         fragmentTransaction.commit();
     }
 
