@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.easysala.models.CallbackHorario;
+import com.example.easysala.models.CallbackImplemento;
 import com.example.easysala.models.CallbackUsuario;
 import com.example.easysala.models.Horario;
+import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Usuarios;
 import com.example.easysala.ui.dashboard.DashboardFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -95,31 +97,21 @@ public class MainActivity extends AppCompatActivity {
                                 sesionIniciada = true;
                                 //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
 
-                                Horario modelo = new Horario("zUXo2twbeCqDF4OYNQXE");
-                                modelo.obtenerInfo(new CallbackHorario(){
-                                    @Override
-                                    public void onObtenerInfo(boolean estado) {
-                                        if (estado) {
-                                            // Alert Dialog que muestre la información de la sala, horario y dia
-                                            //AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                                            //builder.setTitle("Información");
-                                            //builder.setMessage("Sala: " + modelo.getSalaHorario().getNombreSala() + "\n" +
-                                                            //      "Hora Inicio: " + modelo.getBloqueHorario().getHoraInicio() + "\n" +
-                                                    // "Hora Fin: " + modelo.getBloqueHorario().getHoraFin() + "\n" +
-                                            //        "Dia: " + modelo.getDiaHorario().getNombre());
-                                            //builder.setPositiveButton("Aceptar", null);
-                                            //builder.show();
-
-                                            //Toast.makeText(MainActivity.this, "Tipo de inmobiliario: " + modelo.getBloqueHorario().getHoraFin(), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-
+                                Implementos Implemento = new Implementos("U89oBhJX3GnzszqKHgbT");
+                                Implemento.obtenerInfo(new CallbackImplemento(){
                                     @Override
                                     public void onError(String mensaje) {
                                         System.out.println(mensaje);
                                         Log.d("ERROR", mensaje);
+                                    }
+
+                                    @Override
+                                    public void onInfoCargada(boolean estado) {
+                                        if (estado) {
+                                            Toast.makeText(MainActivity.this, "Tipo de inmobiliario: " + Implemento.getUbicacion(), Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
 

@@ -165,7 +165,7 @@ public class listar_implementos extends Fragment {
                         String ubicacion = documento.getData().get("ubicacion").toString();
                         Implementos nuevoImplemento = new Implementos(idImplemento, nombre, ubicacion, cantidad, descripcion, new Modelo(modelo), new TipoImplemento(tipo));
                         implementosInfo.add(nuevoImplemento);
-                        listaImplementos.add(nombre + ". Disponibles " + cantidad + " unidades");
+                        listaImplementos.add(nombre + ". Disponibles " + cantidad + " unidades" + "modelo: " + nuevoImplemento.getModeloImplemento().getNombreModelo());
                     }
 
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaImplementos);

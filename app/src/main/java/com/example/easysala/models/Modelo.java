@@ -82,9 +82,7 @@ public class Modelo implements CallbackModelo {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
                         if (task.isSuccessful()) {
-
                             DocumentSnapshot document = task.getResult();
-
                             if (document.exists()) {
                                 setNombreModelo(document.getString("nombre"));
                                 String documentMarca = document.getString("marca");

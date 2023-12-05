@@ -10,6 +10,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class Implementos  implements CallbackImplemento{
 
@@ -88,7 +90,6 @@ public class Implementos  implements CallbackImplemento{
     public void setTipoImplemento(com.example.easysala.models.TipoImplemento tipoImplemento) {
         TipoImplemento = tipoImplemento;
     }
-
     public void obtenerInfo(CallbackImplemento callback){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,10 +100,9 @@ public class Implementos  implements CallbackImplemento{
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-
                     if (document.exists()) {
-                        setNombreImplemento(document.getString("Nombre"));
-                        setUbicacion(document.getString("Ubicacion"));
+                        setNombreImplemento(document.getString("nombre"));
+                        setUbicacion(document.getString("ubicacion"));
                         String documentTipo = document.getString("tipo");
                         TipoImplemento tipo = new TipoImplemento(documentTipo);
                         String documentModelo = document.getString("modelo");
@@ -111,7 +111,6 @@ public class Implementos  implements CallbackImplemento{
                         modelo.obtenerInfo(new CallbackModelo() {
                             @Override
                             public void onError(String mensaje) {
-                                Log.d("ENTRA","ENTR+Ó");
                                 callback.onError(mensaje);  // Manejar errores relacionados con la obtención del modelo
                                 callback.onInfoCargada(false);
                             }
@@ -120,7 +119,6 @@ public class Implementos  implements CallbackImplemento{
                             public void onInfoCargada(boolean estado) {
 
                                 if (estado) {
-                                    Log.d("TAG" , modelo.getNombreModelo());
                                     setModeloImplemento(modelo);
                                     callback.onInfoCargada(true);
                                 } else {

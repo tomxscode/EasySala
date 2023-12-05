@@ -12,5 +12,17 @@
         android:layout_gravity="center"
         android:text="Reservar implemento"></Button>
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:text="Tus reservas"
+        android:textSize="34sp" />
+
+    <ListView
+        android:id="@+id/lv_reservas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>
