@@ -2,11 +2,14 @@ package com.example.easysala;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ import com.example.easysala.models.Modelo;
 import com.example.easysala.models.ReservaImplemento;
 import com.example.easysala.models.TipoImplemento;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +52,7 @@ public class aprobar_reservas_impl extends Fragment {
     private ArrayList<String> listaNomReservasImpl;
     private ArrayList<Implementos> implementosInfo;
     private Spinner spinnerMarcas;
+
 
     HashMap<String, String> mapeoMarcas = new HashMap<>();
 
@@ -128,6 +134,10 @@ public class aprobar_reservas_impl extends Fragment {
         listReservasImpl.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+    List<ReservaImplemento> tuListaDeReservas = new ArrayList<>();
+
+// ...
+
     public void retornarListaImplementosFirebase() {
         limpiarListaImplementos();
         ProgressDialog progressDialog = new ProgressDialog(requireContext());
@@ -138,9 +148,9 @@ public class aprobar_reservas_impl extends Fragment {
         db.collection("reserva_implemento").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                // Mensaje de cargando
-
                 if (task.isSuccessful()) {
+                    tuListaDeReservas.clear(); // Limpiar la lista antes de actualizar
+
                     for (QueryDocumentSnapshot documento : task.getResult()) {
                         Boolean aprobada = documento.getBoolean("aprobada");
                         Boolean entregado = documento.getBoolean("entregado");
@@ -150,15 +160,13 @@ public class aprobar_reservas_impl extends Fragment {
                         String implemento = documento.getString("implemento");
                         String usuario = documento.getString("usuario");
 
+                        // Construir el objeto ReservaImplemento
+                        ReservaImplemento nuevaReservaImplemento = new ReservaImplemento(documento.getId(),fecha_solicitud,fecha_reserva,fecha_devolucion,null,null,aprobada,entregado);
+                        tuListaDeReservas.add(nuevaReservaImplemento); // Agregar a la lista original
 
-                        String fechaFormateada = formatearFechaResumida(fecha_reserva);
-
-                        ReservaImplemento nuevaReservaImplemento = new ReservaImplemento(fecha_solicitud, fecha_reserva, fecha_devolucion, null, null, aprobada, entregado);
                         db.collection("implemento").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                // Mensaje de cargando
-
                                 String nombreImplementoReserva = null;
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot documento : task.getResult()) {
@@ -169,19 +177,72 @@ public class aprobar_reservas_impl extends Fragment {
                                         }
                                     }
 
-                                    listaNomReservasImpl.add("Estado: " + aprobada + " " + nombreImplementoReserva + " " + fechaFormateada);
+                                    listaNomReservasImpl.add("Estado: " + aprobada + " " + nombreImplementoReserva + " " + formatearFechaResumida(fecha_reserva));
 
                                     ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaNomReservasImpl);
                                     listReservasImpl.setAdapter(adapter);
                                     progressDialog.dismiss();
+                                    listReservasImpl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            ReservaImplemento reservaSeleccionada = tuListaDeReservas.get(position);
+                                            Log.d("Listas", String.valueOf(position));
+                                            Log.d("Listas", reservaSeleccionada.getDocumentId());
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                                            builder.setTitle("Confirmar Aprobación");
+                                            builder.setMessage("¿Estás seguro de aprobar esta reserva?");
+                                            builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    actualizarEstadoReserva(reservaSeleccionada);
+                                                }
+                                            });
+                                            builder.setNegativeButton("No", null); // Si se selecciona "No", no se realiza ninguna acción
+
+                                            // Muestra el AlertDialog
+                                            builder.show();
+                                        }
+                                    });
                                 }
                             }
                         });
                     }
+
                 }
             }
         });
     }
+
+    private void actualizarEstadoReserva(ReservaImplemento reserva) {
+        String documentId = reserva.getDocumentId();
+        Log.d("Lista", documentId);
+        if (documentId != null) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("reserva_implemento").document(documentId).update("aprobada", true)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            listaNomReservasImpl.remove("Estado: " + reserva.isAprobada() + " " + reserva.getImplemento() + " " + formatearFechaResumida(reserva.getFechaReserva()));
+                            // Luego, notifica al adaptador para que se reflejen los cambios en la interfaz de usuario
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaNomReservasImpl);
+                            listReservasImpl.setAdapter(adapter);
+
+                            Toast.makeText(requireContext(), "Reserva aprobada correctamente", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Maneja el caso de error
+                            Toast.makeText(requireContext(), "Error al aprobar la reserva", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(requireContext(), "Error: Identificador del documento nulo", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     private String formatearFechaResumida(Date fecha) {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());

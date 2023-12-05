@@ -36,6 +36,15 @@ public class ReservaImplemento implements CallbackReservaImplemento {
         this.aprobada = aprobada;
         this.entregado = entregado;
     }
+    public ReservaImplemento(String documentId,Date fechaSolicitud, Date fechaReserva, Date fechaDevolucion,Implementos implemento, Usuarios usuario, boolean aprobada, boolean entregado) {
+        this.documentId = documentId;
+        this.fechaSolicitud = fechaSolicitud;
+        this.fechaReserva = fechaReserva;
+        this.fechaDevolucion = fechaDevolucion;
+        this.usuario = usuario;
+        this.aprobada = aprobada;
+        this.entregado = entregado;
+    }
 
     public ReservaImplemento(String documentId) {
         this.documentId = documentId;
