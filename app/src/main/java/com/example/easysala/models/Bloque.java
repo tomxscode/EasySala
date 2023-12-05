@@ -7,6 +7,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
+
 public class Bloque implements CallbackBloque {
 
     private String IdBloque;

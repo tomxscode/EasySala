@@ -1,58 +1,38 @@
 package com.example.easysala.models;
 
 public class Reserva {
-    private int IdReserva;
+    private String documentId;
+    private boolean aprobada;
 
-    private String Fecha;
-    private String HoraInicio;
-    private String HoraFin;
-    private String Descripcion;
+    private Horario horario;
 
-    public Reserva(int idReserva, String fecha, String horaInicio, String horaFin, String descripcion) {
-        IdReserva = idReserva;
-        Fecha = fecha;
-        HoraInicio = horaInicio;
-        HoraFin = horaFin;
-        Descripcion = descripcion;
+    public Reserva(String documentId, boolean aprobada, Horario horario) {
+        this.documentId = documentId;
+        this.aprobada = aprobada;
+        this.horario = horario;
     }
 
-    public int getIdReserva() {
-        return IdReserva;
+    public String getDocumentId() {
+        return documentId;
     }
 
-    public void setIdReserva(int idReserva) {
-        IdReserva = idReserva;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 
-    public String getFecha() {
-        return Fecha;
+    public boolean isAprobada() {
+        return aprobada;
     }
 
-    public void setFecha(String fecha) {
-        Fecha = fecha;
+    public void setAprobada(boolean aprobada) {
+        this.aprobada = aprobada;
     }
 
-    public String getHoraInicio() {
-        return HoraInicio;
+    public Horario getHorario() {
+        return horario;
     }
 
-    public void setHoraInicio(String horaInicio) {
-        HoraInicio = horaInicio;
-    }
-
-    public String getHoraFin() {
-        return HoraFin;
-    }
-
-    public void setHoraFin(String horaFin) {
-        HoraFin = horaFin;
-    }
-
-    public String getDescripcion() {
-        return Descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        Descripcion = descripcion;
+    public void setHorario(Horario horario) {
+        this.horario = horario;
     }
 }
