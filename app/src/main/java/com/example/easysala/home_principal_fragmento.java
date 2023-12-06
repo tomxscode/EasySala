@@ -153,5 +153,5 @@ public class home_principal_fragmento extends Fragment {
                 }
             });
         }
-        }
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.easysala;
 
+import static com.example.easysala.MainActivity.usuarioActual;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -23,9 +25,12 @@ import androidx.fragment.app.Fragment;
 import com.example.easysala.MainActivity;
 import com.example.easysala.R;
 import com.example.easysala.databinding.FragmentHomeBinding;
+import com.example.easysala.models.CallbackHorario;
+import com.example.easysala.models.CallbackImplemento;
 import com.example.easysala.models.CallbackMarca;
 import com.example.easysala.models.CallbackSala;
 import com.example.easysala.models.CallbackTipoImplemento;
+import com.example.easysala.models.Horario;
 import com.example.easysala.models.Implementos;
 import com.example.easysala.models.Marca;
 import com.example.easysala.models.Modelo;
@@ -56,6 +61,9 @@ import java.util.Locale;
  */
 public class AprobarReservas extends Fragment {
 
+    private ListView listViewReservaSalas;
+    private ArrayList<String> listaReservaSalas;
+    private ArrayList<Reserva> reservaSalas;
     private ListView listReservas;
     private FragmentHomeBinding binding;
     private ArrayList<String> listaNomReservas;
@@ -105,9 +113,15 @@ public class AprobarReservas extends Fragment {
             View view = inflater.inflate(R.layout.fragment_aprobar_reservas, container, false);
 
             listReservas = view.findViewById(R.id.list_reservas_aprobar);
-            listaNomReservas = new ArrayList<>();
+            listViewReservaSalas = view.findViewById(R.id.list_reservas_aprobar);
 
-            retornarListaSalasFirebase();
+            listaNomReservas = new ArrayList<>();
+            listaReservaSalas = new ArrayList<>();
+        reservaSalas = new ArrayList<>();
+
+
+
+        retornarReservasSalas();
 
             return view;
         }
@@ -121,135 +135,59 @@ public class AprobarReservas extends Fragment {
 
         return formato.format(fecha);
     }
-    public void retornarListaSalasFirebase() {
-        limpiarListaSalas();
-        ProgressDialog progressDialog = new ProgressDialog(requireContext());
-        progressDialog.setTitle("Cargando salas...");
-        progressDialog.setMessage("Espere unos segundos...");
-        progressDialog.show();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("reserva_sala").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    ListaReservasSala.clear(); // Limpiar la lista antes de actualizar
+    public void retornarReservasSalas(){
+        if(usuarioActual != null){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("reserva_sala").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                    for (QueryDocumentSnapshot documento : task.getResult()) {
-                        String documentId = documento.getId();
-                        Boolean aprobada = documento.getBoolean("aprobada");
-                        String horario = documento.getString("horario");
-                        Reserva nuevaReservaSala = new Reserva(documentId, aprobada, null);
-                        ListaReservasSala.add(nuevaReservaSala);
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documento : task.getResult()) {
+                                boolean aprobado = documento.getBoolean("aprobada");
+                                Horario horario = new Horario(documento.getString("horario"));
+                                Reserva revSala = new Reserva(documento.getId(), aprobado, horario);
+                                horario.obtenerInfo(new CallbackHorario() {
+                                    @Override
+                                    public void onError(String mensaje) {
 
-                        db.collection("horario").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                String salaReserva = null;
-                                String bloqueReserva = null;
-                                String diaReserva = null;
-                                if (task.isSuccessful()){
-                                    for (QueryDocumentSnapshot documento : task.getResult()){
-                                        String idHorario = documento.getId();
-                                        String sala = documento.getString("sala");
-                                        String bloque = documento.getString("bloque");
-                                        String dia = documento.getString("dia");
-                                        if(idHorario.equals(horario)){
-                                            salaReserva = sala;
-                                            bloqueReserva = bloque;
-                                            diaReserva = dia;
-                                        }
-                                        String finalSalaReserva = salaReserva;
-                                        String finalDiaReserva = diaReserva;
-                                        String finalBloqueReserva = bloqueReserva;
-                                        db.collection("sala").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                String nombreSala = null;
-                                                if(task.isSuccessful()){
-                                                    for (QueryDocumentSnapshot documento : task.getResult()){
-                                                        String idSala = documento.getId();
-                                                        String nombre = documento.getString("nombre");
-                                                        if(idSala.equals(finalSalaReserva)){
-                                                            nombreSala = nombre;
-                                                        }
-                                                        String finalNombreSala = nombreSala;
-                                                        db.collection("dia").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                String nombreDia = null;
-                                                                if(task.isSuccessful()){
-                                                                    for (QueryDocumentSnapshot documento : task.getResult()){
-                                                                        String idDia = documento.getId();
-                                                                        String nombre = documento.getString("nombre");
-                                                                        if (idDia.equals(finalDiaReserva)){
-                                                                            nombreDia = nombre;
-                                                                        }
-                                                                        db.collection("bloque").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                                String horaInicio = null;
-                                                                                String horaFin = null;
-                                                                                if(task.isSuccessful()) {
-                                                                                    for (QueryDocumentSnapshot documento : task.getResult()) {
-                                                                                        String idBloque = documento.getId();
-                                                                                        String horaIni = documento.getString("hora_inicio");
-                                                                                        String horaF = documento.getString("hora_fin");
-                                                                                        if (idBloque.equals(finalBloqueReserva)) {
-                                                                                            horaInicio = horaIni;
-                                                                                            horaFin = horaF;
-                                                                                        }
-                                                                                    }
-
-                                                                                    listaNomReservas.add("Estado: " + aprobada + " Sala: " + finalNombreSala + " " + horaInicio + " " + horaFin);
-                                                                                    ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaNomReservas);
-                                                                                    listReservas.setAdapter(adapter);
-                                                                                    progressDialog.dismiss();
-                                                                                    listReservas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                                                                        @Override
-                                                                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                                                            Reserva reservaSeleccionada = ListaReservasSala.get(position);
-                                                                                            Log.d("Listas", aprobada.toString());
-                                                                                            Log.d("Listas", String.valueOf(position));
-                                                                                            Log.d("Listas", reservaSeleccionada.getDocumentId());
-                                                                                            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                                                                                            builder.setTitle("Confirmar Aprobación");
-                                                                                            builder.setMessage("¿Estás seguro de aprobar esta reserva?");
-                                                                                            builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-                                                                                                @Override
-                                                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                                                    actualizarEstadoReserva(reservaSeleccionada);
-                                                                                                }
-                                                                                            });
-                                                                                            builder.setNegativeButton("No", null); // Si se selecciona "No", no se realiza ninguna acción
-
-                                                                                            builder.show();
-                                                                                        }
-                                                                                    });
-                                                                                }
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                }
-
-
-
-
-
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        });
                                     }
+                                    @Override
+                                    public void onObtenerInfo(boolean encontrado) {
+                                        if(encontrado){
+                                            revSala.setHorario(horario);
+                                            reservaSalas.add(revSala);
+                                            listaReservaSalas.add("Aprobada: " + aprobado + " \nHora inicio: " + revSala.getHorario().getBloqueHorario().getHoraInicio()+
+                                                    " \nHora fin: "+ revSala.getHorario().getBloqueHorario().getHoraFin() + " \nDía: " + revSala.getHorario().getDiaHorario().getNombre()+
+                                                    " \nSala: " + revSala.getHorario().getSalaHorario().getNombreSala());
+                                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservaSalas);
+                                            listViewReservaSalas.setAdapter(adapter);
+                                        }
+                                    }
+                                });
+                            listReservas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Reserva reservaSeleccionada = reservaSalas.get(position);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                                    builder.setTitle("Confirmar Aprobación");
+                                    builder.setMessage("¿Estás seguro de aprobar esta reserva?");
+                                    builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            actualizarEstadoReserva(reservaSeleccionada);
+                                        }
+                                    });
+                                    builder.setNegativeButton("No", null); // Si se selecciona "No", no se realiza ninguna acción
+                                    builder.show();
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
+            });
+        }
 
-            }
-        });
     }
 
     public void limpiarListaSalas() {
@@ -286,17 +224,15 @@ public class AprobarReservas extends Fragment {
 
     private void actualizarEstadoReserva(Reserva reserva) {
         String documentId = reserva.getDocumentId();
-        Log.d("Lista", documentId);
         if (documentId != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("reserva_sala").document(documentId).update("aprobada", true)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            listaNomReservas.remove("Estado: " + reserva);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaNomReservas);
-                            listReservas.setAdapter(adapter);
-
+                            listaReservaSalas.remove("Estado: " + reserva);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservaSalas);
+                            listViewReservaSalas.setAdapter(adapter);
                             Toast.makeText(requireContext(), "Reserva aprobada correctamente", Toast.LENGTH_SHORT).show();
                         }
                     })
