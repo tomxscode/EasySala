@@ -146,7 +146,7 @@ public class AprobarReservas extends Fragment {
                         for (QueryDocumentSnapshot documento : task.getResult()) {
                                 boolean aprobado = documento.getBoolean("aprobada");
                                 Horario horario = new Horario(documento.getString("horario"));
-                                Reserva revSala = new Reserva(documento.getId(), aprobado, horario);
+                                Reserva revSala = new Reserva(documento.getId(), aprobado, horario, usuarioActual);
                                 horario.obtenerInfo(new CallbackHorario() {
                                     @Override
                                     public void onError(String mensaje) {

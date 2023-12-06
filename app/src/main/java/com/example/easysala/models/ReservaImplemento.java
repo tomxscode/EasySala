@@ -149,9 +149,6 @@ public class ReservaImplemento implements CallbackReservaImplemento {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference reservaImplementoRef = db.collection("reserva_implemento");
 
-        Log.d("USUARIO", usuario.getUid_bd());
-        Log.d("IMPLEMENTO", implemento.getIdImplemento());
-
         // Comprobar que el id de usuario y implemento no venga nulo
         if (usuario == null || implemento == null) {
             callback.onReservaRealizada(false);

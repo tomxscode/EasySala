@@ -6,8 +6,15 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/btnReservarSalas"
+        android:layout_width="377dp"
+        android:layout_height="103dp"
+        android:layout_gravity="center"
+        android:text="Reservar Salas"></Button>
+
+    <Button
         android:id="@+id/btnReservarImplemento"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="103dp"
         android:layout_gravity="center"
         android:text="Reservar implemento"></Button>
@@ -15,12 +22,28 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:text="Tus reservas"
-        android:textSize="34sp" />
+        android:layout_height="32dp"
+        android:text="Implementos Reservados"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_marginTop="40dp"/>
 
     <ListView
         android:id="@+id/lv_reservas"
+        android:layout_width="match_parent"
+        android:layout_height="128dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:text="Salas Reservadas"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_marginTop="40dp"/>
+
+    <ListView
+        android:id="@+id/lv_reservaSalas"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

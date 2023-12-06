@@ -8,10 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.easysala.models.CallbackHorario;
 import com.example.easysala.models.CallbackImplemento;
+import com.example.easysala.models.Horario;
 import com.example.easysala.models.Implementos;
+import com.example.easysala.models.Reserva;
 import com.example.easysala.models.ReservaImplemento;
 import com.example.easysala.ui.implementos.listar_implementos;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,7 +31,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +42,9 @@ public class home_principal_fragmento extends Fragment {
     private ListView listViewReservasImplementos;
     private ArrayList<String> listaReservasImplementos;
     private ArrayList<ReservaImplemento> reservaImplementos;
+    private ListView listViewReservasSalas;
+    private ArrayList<String> listaReservasSalas;
+    private ArrayList<Reserva> reservaSalas;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,15 +92,26 @@ public class home_principal_fragmento extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home_principal_fragmento, container, false);
         listViewReservasImplementos = root.findViewById(R.id.lv_reservas);
+        listViewReservasSalas = root.findViewById(R.id.lv_reservaSalas);
+        listaReservasSalas = new ArrayList<>();
+        reservaSalas = new ArrayList<>();
         listaReservasImplementos = new ArrayList<>();
         reservaImplementos = new ArrayList<>();
         Button btnListarImplemento = root.findViewById(R.id.btnReservarImplemento);
+        Button btnReservarSalas = root.findViewById(R.id.btnReservarSalas);
         retornarReservasImplementos();
+        retornarReservasSalas();
 
         btnListarImplemento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cargarFragmento(new listar_implementos());
+            }
+        });
+        btnReservarSalas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmento(new ListarSalasFragment());
             }
         });
 
@@ -113,6 +126,49 @@ public class home_principal_fragmento extends Fragment {
         fragmentTransaction.commit();
     }
 
+
+    public void retornarReservasSalas(){
+        if(usuarioActual != null){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("reserva_sala").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documento : task.getResult()) {
+                            if(documento.getData().get("usuario").equals(usuarioActual.getUid_bd())){
+                                boolean aprobado = documento.getBoolean("aprobada");
+                                Horario horario = new Horario(documento.getString("horario"));
+                                Reserva reserva = new Reserva(documento.getId(), aprobado, horario, usuarioActual);
+
+                                horario.obtenerInfo(new CallbackHorario() {
+                                    @Override
+                                    public void onError(String mensaje) {
+
+                                    }
+
+                                    @Override
+                                    public void onObtenerInfo(boolean encontrado) {
+                                        if(encontrado){
+                                            String ap = (reserva.isAprobada()) ? "Aprobada" : "No aprobada";
+                                            reserva.setHorario(horario);
+                                            reservaSalas.add(reserva);
+                                            listaReservasSalas.add("Sala" + reserva.getHorario().getSalaHorario().getNombreSala()+ " | Día:" + reserva.getHorario().getDiaHorario().getNombre()+
+                                                    " | Aprobada: " + ap);
+                                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservasSalas);
+                                            listViewReservasSalas.setAdapter(adapter);
+                                        }
+                                    }
+                                });
+
+                            }
+                        }
+
+                    }
+                }
+            });
+        }
+    }
     public void retornarReservasImplementos(){
         if(usuarioActual != null){
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -137,9 +193,10 @@ public class home_principal_fragmento extends Fragment {
                                     @Override
                                     public void onInfoCargada(boolean estado){
                                         if(estado){
+                                            String ap = (aprobado) ? "Aprobada" : "No aprobada";
                                             resImplemento.setImplemento(implemento);
                                             reservaImplementos.add(resImplemento);
-                                            listaReservasImplementos.add(" Modelo: " + resImplemento.getImplemento().getNombreImplemento()+"Aprobada: " + aprobado);
+                                            listaReservasImplementos.add("Implemento : " + resImplemento.getImplemento().getNombreImplemento()+" | Aprobada: " + ap);
                                             ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservasImplementos);
                                             listViewReservasImplementos.setAdapter(adapter);
                                         }
