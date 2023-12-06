@@ -114,43 +114,44 @@ public class home_principal_fragmento extends Fragment {
     }
 
     public void retornarReservasImplementos(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("reserva_implemento").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+        if(usuarioActual != null){
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("reserva_implemento").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot documento : task.getResult()) {
-                        if(documento.getData().get("usuario").equals(usuarioActual.getUid_bd())){
-                            boolean aprobado = documento.getBoolean("aprobada");
-                            boolean entregado = documento.getBoolean("entregado");
-                            Date fecha_devolucion = documento.getDate("fecha_devolucion");
-                            Date fecha_reserva = documento.getDate("fecha_reserva");
-                            Date fecha_solicitud = documento.getDate("fecha_solicitud");
-                            Implementos implemento = new Implementos(documento.getString("implemento"));
-                            ReservaImplemento resImplemento = new ReservaImplemento(fecha_solicitud,fecha_reserva,fecha_devolucion, implemento,usuarioActual,aprobado,entregado);
-                            implemento.obtenerInfo(new CallbackImplemento() {
-                                @Override
-                                public void onError(String mensaje) {
-                                }
-                                @Override
-                                public void onInfoCargada(boolean estado){
-                                    if(estado){
-                                        resImplemento.setImplemento(implemento);
-                                        reservaImplementos.add(resImplemento);
-                                        listaReservasImplementos.add(" Modelo: " + resImplemento.getImplemento().getNombreImplemento()+"Aprobada: " + aprobado);
-                                        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservasImplementos);
-                                        listViewReservasImplementos.setAdapter(adapter);
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot documento : task.getResult()) {
+                            if(documento.getData().get("usuario").equals(usuarioActual.getUid_bd())){
+                                boolean aprobado = documento.getBoolean("aprobada");
+                                boolean entregado = documento.getBoolean("entregado");
+                                Date fecha_devolucion = documento.getDate("fecha_devolucion");
+                                Date fecha_reserva = documento.getDate("fecha_reserva");
+                                Date fecha_solicitud = documento.getDate("fecha_solicitud");
+                                Implementos implemento = new Implementos(documento.getString("implemento"));
+                                ReservaImplemento resImplemento = new ReservaImplemento(fecha_solicitud,fecha_reserva,fecha_devolucion, implemento,usuarioActual,aprobado,entregado);
+                                implemento.obtenerInfo(new CallbackImplemento() {
+                                    @Override
+                                    public void onError(String mensaje) {
                                     }
-                                }
-                            });
+                                    @Override
+                                    public void onInfoCargada(boolean estado){
+                                        if(estado){
+                                            resImplemento.setImplemento(implemento);
+                                            reservaImplementos.add(resImplemento);
+                                            listaReservasImplementos.add(" Modelo: " + resImplemento.getImplemento().getNombreImplemento()+"Aprobada: " + aprobado);
+                                            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, listaReservasImplementos);
+                                            listViewReservasImplementos.setAdapter(adapter);
+                                        }
+                                    }
+                                });
 
+                            }
                         }
+
                     }
-
                 }
-            }
-        });
-    }
-
+            });
+        }
+        }
 }

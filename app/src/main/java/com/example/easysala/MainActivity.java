@@ -95,25 +95,7 @@ public class MainActivity extends AppCompatActivity {
                             if (usuarioActual.isHabilitado()) {
                                 MainActivity.rolUsuario = MainActivity.usuarioActual.getRol();
                                 sesionIniciada = true;
-                                //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show();
-
-                                Implementos Implemento = new Implementos("U89oBhJX3GnzszqKHgbT");
-                                Implemento.obtenerInfo(new CallbackImplemento(){
-                                    @Override
-                                    public void onError(String mensaje) {
-                                        System.out.println(mensaje);
-                                        Log.d("ERROR", mensaje);
-                                    }
-
-                                    @Override
-                                    public void onInfoCargada(boolean estado) {
-                                        if (estado) {
-                                            Toast.makeText(MainActivity.this, "Tipo de inmobiliario: " + Implemento.getUbicacion(), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(MainActivity.this, "No encontrado", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
+                                //Toast.makeText(MainActivity.this, "Bienvenido " + usuarioActual.getNombre(), Toast.LENGTH_SHORT).show()
 
                             } else {
                                 AlertDialog .Builder builder = new AlertDialog.Builder(MainActivity.this);

@@ -143,7 +143,6 @@ public class AprobarReservas extends Fragment {
 
                         db.collection("horario").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
-
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 String salaReserva = null;
                                 String bloqueReserva = null;
@@ -231,6 +230,11 @@ public class AprobarReservas extends Fragment {
                                                                         });
                                                                     }
                                                                 }
+
+
+
+
+
                                                             }
                                                         });
                                                     }
