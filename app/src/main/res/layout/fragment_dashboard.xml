@@ -33,6 +33,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/ListRecyclerView" />
 
+    <Button
+        android:id="@+id/btn_reservar_salas"
+        android:layout_width="172dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="552dp"
+        android:text="Reservas Salas"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.874"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ListRecyclerView" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -50,6 +62,18 @@
         android:text="Aprobar reservas implementos"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/btn_aprobar_salas"
+        app:layout_constraintHorizontal_bias="0.702"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_listar_implementos"
+        android:layout_width="172dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="552dp"
+        android:text="Reservar implementos"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toStartOf="@+id/btn_reservar_salas"
         app:layout_constraintHorizontal_bias="0.702"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

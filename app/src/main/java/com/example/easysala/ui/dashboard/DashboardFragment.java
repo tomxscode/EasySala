@@ -15,11 +15,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.easysala.AprobarReservas;
+import com.example.easysala.ListarSalasFragment;
 import com.example.easysala.MainActivity;
 import com.example.easysala.R;
 import com.example.easysala.aprobar_reservas_impl;
 import com.example.easysala.databinding.FragmentDashboardBinding;
 import com.example.easysala.models.Horario;
+import com.example.easysala.ui.implementos.listar_implementos;
 
 import java.util.List;
 
@@ -40,6 +42,8 @@ public class DashboardFragment extends Fragment {
 
         Button btn_aprobar_salas = view.findViewById(R.id.btn_aprobar_salas);
         Button btn_aprobar_implementos = view.findViewById(R.id.btn_aprobar_implementos);
+        Button btn_reservar_salas = view.findViewById(R.id.btn_reservar_salas);
+        Button btn_listar_implementos = view.findViewById(R.id.btn_listar_implementos);
         if (MainActivity.rolUsuario > 2) {
             btn_aprobar_salas.setVisibility(View.VISIBLE);
             btn_aprobar_implementos.setVisibility(View.VISIBLE);
@@ -57,6 +61,18 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cargarFragmento(new aprobar_reservas_impl());
+            }
+        });
+        btn_listar_implementos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmento(new listar_implementos());
+            }
+        });
+        btn_reservar_salas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cargarFragmento(new ListarSalasFragment());
             }
         });
         return view;

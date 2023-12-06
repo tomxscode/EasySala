@@ -12,7 +12,8 @@
         android:layout_gravity="center"
         android:text="Reservar Salas"
         android:textColor="@color/white"
-        android:textSize="20sp"></Button>
+        android:textSize="20sp"
+        android:visibility="invisible"></Button>
 
     <Button
         android:id="@+id/btnReservarImplemento"
@@ -21,7 +22,8 @@
         android:layout_gravity="center"
         android:text="Reservar implemento"
         android:textColor="#FFFFFF"
-        android:textSize="20sp"></Button>
+        android:textSize="20sp"
+        android:visibility="invisible"></Button>
 
     <TextView
         android:id="@+id/textView"
