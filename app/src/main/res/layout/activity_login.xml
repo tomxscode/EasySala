@@ -73,19 +73,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_login_pass"
         app:layout_constraintVertical_bias="0.043" />
 
-    <Button
-        android:id="@+id/btn_login_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFD600"
-        android:text="Registrar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login_ini"
-        app:layout_constraintVertical_bias="0.14" />
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="138dp"

@@ -17,19 +17,23 @@
             android:id="@+id/btnMiPerfil"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Ver mi perfil" />
+            android:text="Ver mi perfil"
+            android:textColor="#FFFFFF"
+            app:iconTint="#FFFFFF" />
 
         <Button
             android:id="@+id/btn2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Mi cuenta 2" />
+            android:text="Mi cuenta 2"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/btn_cerrarSesion"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Cerrar Sesión" />
+            android:text="Cerrar Sesión"
+            android:textColor="#FFFFFF" />
 
 
     </LinearLayout>

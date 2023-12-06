@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         TextInputLayout textInputLayoutpass = findViewById(R.id.txt_login_pass);
         editTextpass = (TextInputEditText) textInputLayoutpass.getEditText();
         password = editTextpass.getText().toString();
-        btnRegistrar = findViewById(R.id.btn_login_reg);
         btnLogin = findViewById(R.id.btn_login_ini);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -121,40 +120,6 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     dialogCargando.dismiss();
                                     Toast.makeText(LoginActivity.this, "Error al iniciar sesión", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
-        });
-
-        btnRegistrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String emailTxt = email;
-                String passTxt = password;
-                String nombre = emailTxt.substring(0, emailTxt.indexOf("."));
-                String apellido = emailTxt.substring(emailTxt.indexOf(".") + 1, emailTxt.indexOf("@"));
-
-                mAuth.createUserWithEmailAndPassword(emailTxt, passTxt)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Creación de usuario exitosa
-                                    Toast.makeText(LoginActivity.this, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show();
-
-                                    // Crear el objeto Usuarios
-                                    MainActivity.usuarioActual = new Usuarios(nombre, apellido, emailTxt, 1, mAuth.getUid(), false);
-                                    // Agregar a la BD
-                                    MainActivity.usuarioActual.guardarBd();
-
-                                    // Iniciar la actividad principal (MainActivity)
-                                    Intent pagPrincipal = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(pagPrincipal);
-                                    finish();
-                                } else {
-                                    // Error en la creación del usuario
-                                    Toast.makeText(LoginActivity.this, "Error al crear el usuario", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

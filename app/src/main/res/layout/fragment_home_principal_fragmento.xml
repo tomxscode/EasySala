@@ -10,23 +10,28 @@
         android:layout_width="377dp"
         android:layout_height="103dp"
         android:layout_gravity="center"
-        android:text="Reservar Salas"></Button>
+        android:text="Reservar Salas"
+        android:textColor="@color/white"
+        android:textSize="20sp"></Button>
 
     <Button
         android:id="@+id/btnReservarImplemento"
         android:layout_width="380dp"
         android:layout_height="103dp"
         android:layout_gravity="center"
-        android:text="Reservar implemento"></Button>
+        android:text="Reservar implemento"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"></Button>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/alfa_slab_one"
         android:text="Implementos Reservados"
         android:textAlignment="center"
-        android:textSize="24sp"
-        android:layout_marginTop="40dp"/>
+        android:textSize="24sp" />
 
     <ListView
         android:id="@+id/lv_reservas"
@@ -37,10 +42,11 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/alfa_slab_one"
         android:text="Salas Reservadas"
         android:textAlignment="center"
-        android:textSize="24sp"
-        android:layout_marginTop="40dp"/>
+        android:textSize="24sp" />
 
     <ListView
         android:id="@+id/lv_reservaSalas"
